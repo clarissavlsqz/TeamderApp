@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#2B2343",
     paddingVertical: 10,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Bold",
   },
 
   logo: {
