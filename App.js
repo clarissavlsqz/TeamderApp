@@ -1,16 +1,28 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import InitialView from "./InitialView";
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
-
-SplashScreen.preventAutoHideAsync();
+import React, { useCallback, useState, useEffect } from "react";
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
-  });
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await Font.loadAsync({
+          Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
+          "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+        });
+      } catch {
+        // handle error
+      } finally {
+        setFontsLoaded(true);
+      }
+    })();
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
