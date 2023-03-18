@@ -1,9 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import InitialView from "./InitialView";
+import InitialView from "./views/InitialView";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -39,9 +43,15 @@ export default function App() {
     //  <Text>Open up App.js to start working on your app!</Text>
     //  <StatusBar style="auto" />
     //</View>
-    <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
-      <InitialView />
-    </SafeAreaView>
+    <NavigationContainer onLayout={onLayoutRootView}>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Initial"
+          component={InitialView}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
