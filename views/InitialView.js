@@ -10,7 +10,7 @@ import {
 import { Image } from "expo-image";
 import LocalImages from "../assets/images/LocalImages";
 
-export default function InitialView() {
+export default function InitialView({ navigation }) {
   return (
     <View style={styles.container}>
       <Image source={LocalImages.logo} style={styles.logo} />
@@ -23,7 +23,7 @@ export default function InitialView() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => Alert.alert("Sign Up Button pressed")}
+        onPress={() => navigation.navigate("SignUp")}
       >
         <Text style={styles.text}> Sign Up </Text>
       </TouchableOpacity>
