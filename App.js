@@ -1,41 +1,32 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import InitialView from "./views/InitialView";
-import * as Font from "expo-font";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useCallback, useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SignUpView from "./views/SignUpView";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [fontsLoaded] = useFonts({
+    Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
+    "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+  });
 
   useEffect(() => {
-    (async () => {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-        await Font.loadAsync({
-          Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
-          "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-        });
-      } catch {
-        // handle error
-      } finally {
-        setFontsLoaded(true);
-      }
-    })();
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
     }
-  }, [fontsLoaded]);
+    prepare();
+  }, []);
 
   if (!fontsLoaded) {
     return null;
+  } else {
+    SplashScreen.hideAsync();
   }
 
   return (
@@ -43,12 +34,17 @@ export default function App() {
     //  <Text>Open up App.js to start working on your app!</Text>
     //  <StatusBar style="auto" />
     //</View>
-    <NavigationContainer onLayout={onLayoutRootView}>
-      <Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Initial">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Initial"
           component={InitialView}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SignUp"
+          component={SignUpView}
         />
       </Stack.Navigator>
     </NavigationContainer>
