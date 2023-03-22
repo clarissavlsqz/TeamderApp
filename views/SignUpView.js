@@ -10,7 +10,8 @@ import {
 import { SelectList } from "react-native-dropdown-select-list";
 import { A } from "@expo/html-elements";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const personalityTypes = [
   { label: "INTJ", value: "INTJ" },
@@ -38,6 +39,17 @@ async function storeUserInfo(
   password,
   personality
 ) {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log(user);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    });
   try {
     const docRef = await addDoc(collection(db, "users"), {
       firstName: firstName,
@@ -52,7 +64,7 @@ async function storeUserInfo(
   }
 }
 
-export default function SignUpView() {
+export default function SignUpView({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
