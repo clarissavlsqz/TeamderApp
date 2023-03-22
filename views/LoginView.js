@@ -6,10 +6,28 @@ import {
   Text,
 } from "react-native";
 import { useState } from "react";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginView() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  const onLogin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("SIGNED IN!!");
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,10 +43,7 @@ export default function LoginView() {
         onChangeText={setLoginPassword}
         value={loginPassword}
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => console.log("Yay! Login!")}
-      >
+      <TouchableOpacity style={styles.button} onPress={onLogin}>
         <Text style={styles.buttonText}> Login </Text>
       </TouchableOpacity>
     </SafeAreaView>
