@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import { A } from "@expo/html-elements";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 const personalityTypes = [
   { label: "INTJ", value: "INTJ" },
@@ -29,6 +31,27 @@ const personalityTypes = [
   { label: "ESFP", value: "ESFP" },
 ];
 
+async function storeUserInfo(
+  firstName,
+  lastName,
+  email,
+  password,
+  personality
+) {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      personality: personality,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
 export default function SignUpView() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -36,6 +59,15 @@ export default function SignUpView() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [personality, setPersonality] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState(false);
+
+  function validatePassword() {
+    if (password != confirmPassword) {
+      setPasswordMessage(true);
+    } else {
+      setPasswordMessage(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,8 +100,12 @@ export default function SignUpView() {
         onChangeText={setConfirmPassword}
         value={confirmPassword}
         placeholder="Confirm password"
-        style={styles.textInput}
+        style={passwordMessage ? styles.textInputError : styles.textInput}
+        onBlur={validatePassword}
       />
+      {passwordMessage ? (
+        <Text style={styles.passwordError}>Password does not match</Text>
+      ) : null}
       <SelectList
         setSelected={setPersonality}
         data={personalityTypes}
@@ -91,7 +127,9 @@ export default function SignUpView() {
         </A>
       </Text>
       <TouchableOpacity
-        onPress={() => Alert.alert("Create Button pressed")}
+        onPress={() =>
+          storeUserInfo(firstName, lastName, email, password, personality)
+        }
         style={styles.button}
       >
         <Text style={styles.buttonText}> Create </Text>
@@ -118,6 +156,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 40,
   },
+  textInputError: {
+    borderBottomColor: "red",
+    borderBottomWidth: 1,
+    width: "70%",
+    fontSize: 18,
+    marginTop: 40,
+  },
   box: {
     width: "65%",
     marginTop: 40,
@@ -132,6 +177,9 @@ const styles = StyleSheet.create({
   },
   redirectText: {
     width: "60%",
+    marginTop: 10,
+  },
+  passwordError: {
     marginTop: 10,
   },
   button: {
