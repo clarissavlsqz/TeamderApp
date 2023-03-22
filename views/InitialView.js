@@ -7,11 +7,10 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useFonts } from "expo-font";
 import { Image } from "expo-image";
-import LocalImages from "./assets/images/LocalImages";
+import LocalImages from "../assets/images/LocalImages";
 
-export default function InitialView() {
+export default function InitialView({ navigation }) {
   return (
     <View style={styles.container}>
       <Image source={LocalImages.logo} style={styles.logo} />
@@ -24,7 +23,7 @@ export default function InitialView() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => Alert.alert("Sign Up Button pressed")}
+        onPress={() => navigation.navigate("SignUp")}
       >
         <Text style={styles.text}> Sign Up </Text>
       </TouchableOpacity>
@@ -34,7 +33,10 @@ export default function InitialView() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#2B2343",
   },
 
   button: {
