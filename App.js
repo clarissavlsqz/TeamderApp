@@ -7,6 +7,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
+import LoginView from "./views/LoginView";
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="SignUp"
           component={SignUpView}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginView}
         />
       </Stack.Navigator>
     </NavigationContainer>

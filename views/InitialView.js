@@ -16,7 +16,7 @@ export default function InitialView({ navigation }) {
       <Image source={LocalImages.logo} style={styles.logo} />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => Alert.alert("Login Button pressed")}
+        onPress={() => navigation.navigate("Login")}
       >
         <Text style={styles.text}> Login </Text>
       </TouchableOpacity>
