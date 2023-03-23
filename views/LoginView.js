@@ -9,7 +9,7 @@ import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-export default function LoginView() {
+export default function LoginView({ navigation }) {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
@@ -21,6 +21,7 @@ export default function LoginView() {
         const user = userCredential.user;
         console.log("SIGNED IN!!");
         console.log(user);
+        navigation.navigate("Home");
       })
       .catch((error) => {
         const errorCode = error.code;

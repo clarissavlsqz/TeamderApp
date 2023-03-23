@@ -8,6 +8,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
 import LoginView from "./views/LoginView";
+import HomeView from "./views/HomeView";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,19 @@ export default function App() {
           options={{ headerShown: false }}
           name="Login"
           component={LoginView}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: true,
+            headerBackVisible: false,
+            title: "Teams",
+            headerStyle: {
+              backgroundColor: "#2B2343",
+            },
+            headerTintColor: "#F5F5F5",
+          }}
+          name="Home"
+          component={HomeView}
         />
       </Stack.Navigator>
     </NavigationContainer>
