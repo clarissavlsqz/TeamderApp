@@ -4,6 +4,8 @@ import HomeView from "../views/HomeView";
 import SearchView from "../views/SearchView";
 import NotificationsView from "../views/NotificationsView";
 import ProfileView from "../views/ProfileView";
+import { MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +53,16 @@ export default function BottomTabNav() {
             backgroundColor: "#2B2343",
           },
           headerTintColor: "#F5F5F5",
+          headerRight: () => (
+            <View style={styles.createGroupIcon}>
+              <MaterialIcons
+                name="group-add"
+                color="#F5F5F5"
+                size={24}
+                onPress={() => console.log("CREATE GROUP")}
+              />
+            </View>
+          ),
         }}
       />
       <Tab.Screen
@@ -95,3 +107,9 @@ export default function BottomTabNav() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  createGroupIcon: {
+    paddingRight: 20,
+  },
+});
