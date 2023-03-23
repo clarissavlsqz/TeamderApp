@@ -1,14 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import InitialView from "./views/InitialView";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
 import LoginView from "./views/LoginView";
-import HomeView from "./views/HomeView";
+import BottomTabNav from "./components/BottomTabNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,17 +53,9 @@ export default function App() {
           component={LoginView}
         />
         <Stack.Screen
-          options={{
-            headerShown: true,
-            headerBackVisible: false,
-            title: "Teams",
-            headerStyle: {
-              backgroundColor: "#2B2343",
-            },
-            headerTintColor: "#F5F5F5",
-          }}
-          name="Home"
-          component={HomeView}
+          name="Tab"
+          component={BottomTabNav}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
