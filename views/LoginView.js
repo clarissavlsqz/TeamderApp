@@ -21,7 +21,6 @@ export default function LoginView({ navigation }) {
         const user = userCredential.user;
         console.log("SIGNED IN!!");
         console.log(user);
-        navigation.navigate("Tab");
       })
       .catch((error) => {
         const errorCode = error.code;

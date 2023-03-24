@@ -1,14 +1,17 @@
 import { StyleSheet } from "react-native";
+import "react-native-gesture-handler";
 import InitialView from "./views/InitialView";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
 import LoginView from "./views/LoginView";
 import BottomTabNav from "./components/BottomTabNav";
 import AddGroupView from "./views/AddGroupView";
+import { auth } from "./firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,61 +20,58 @@ export default function App() {
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
   });
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    prepare();
+    SplashScreen.preventAutoHideAsync();
+
+    onAuthStateChanged(auth, (user) => {
+      setAuthLoaded(true);
+      setLoggedIn(user !== null);
+    });
   }, []);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !authLoaded) {
     return null;
-  } else {
-    SplashScreen.hideAsync();
   }
 
+  SplashScreen.hideAsync();
+
   return (
-    //<View style={styles.container}>
-    //  <Text>Open up App.js to start working on your app!</Text>
-    //  <StatusBar style="auto" />
-    //</View>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Initial">
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Initial"
-          component={InitialView}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="SignUp"
-          component={SignUpView}
-        />
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={LoginView}
-        />
-        <Stack.Screen
-          name="Tab"
-          component={BottomTabNav}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-        name="AddGroup"
-        component={AddGroupView}
-        options={{ headerShown: true }}
-      />
-      </Stack.Navigator>
+      {!loggedIn ? (
+        <Stack.Navigator initialRouteName="Initial">
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Initial"
+            component={InitialView}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="SignUp"
+            component={SignUpView}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={LoginView}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator initialRouteName="Tab">
+          <Stack.Screen
+            name="Tab"
+            component={BottomTabNav}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AddGroup"
+            component={AddGroupView}
+            options={{ headerShown: true }}
+          />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#2B2343",
-    justifyContent: "center",
-  },
-});
