@@ -1,6 +1,12 @@
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { SafeAreaView, StatusBar, StyleSheet, Text } from "react-native";
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { auth, db } from "../firebaseConfig";
 
 export default function ProfileView() {
@@ -26,6 +32,10 @@ export default function ProfileView() {
     fetchUserData();
   }, [userEmail, userName, userPersonality]);
 
+  const onLogout = () => {
+    auth.signOut();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={"light-content"} />
@@ -41,6 +51,10 @@ export default function ProfileView() {
         {" "}
         <Text style={styles.boldText}>Personality:</Text> {userPersonality}
       </Text>
+
+      <TouchableOpacity style={styles.button} onPress={onLogout}>
+        <Text style={styles.buttonText}> Logout </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -54,8 +68,19 @@ const styles = StyleSheet.create({
   profileText: {
     fontSize: 20,
     marginTop: 10,
+    marginBottom: 10,
   },
   boldText: {
     fontWeight: "bold",
+  },
+  button: {
+    backgroundColor: "#98D7D0",
+    alignItems: "center",
+    borderRadius: 25,
+    width: "80%",
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: "Poppins-Bold",
   },
 });
