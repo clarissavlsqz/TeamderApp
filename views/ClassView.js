@@ -27,6 +27,15 @@ export default function ClassView() {
     <SafeAreaView>
       <StatusBar barStyle={"light-content"} />
 
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("CreateClass")
+        }
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}> Create Class </Text>
+      </TouchableOpacity>
+
       <FlatList
         data={dummyClasses}
         renderItem={renderItem}
@@ -52,5 +61,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     fontWeight: "bold",
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: "Poppins-Bold",
+  },
+  button: {
+    marginTop: 40,
   },
 });

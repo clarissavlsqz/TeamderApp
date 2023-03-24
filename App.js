@@ -12,6 +12,7 @@ import BottomTabNav from "./components/BottomTabNav";
 import AddGroupView from "./views/AddGroupView";
 import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import CreateClassView from "./views/CreateClassView";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,11 @@ export default function App() {
           <Stack.Screen
             name="AddGroup"
             component={AddGroupView}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="CreateClass"
+            component={CreateClassView}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>
