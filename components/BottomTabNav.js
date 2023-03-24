@@ -1,13 +1,15 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import HomeView from "../views/HomeView";
-import SearchView from "../views/SearchView";
+import ClassView from "../views/ClassView";
 import NotificationsView from "../views/NotificationsView";
 import ProfileView from "../views/ProfileView";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
+
+
 
 export default function BottomTabNav({navigation}) {
   return (
@@ -20,9 +22,9 @@ export default function BottomTabNav({navigation}) {
           if (route.name === "Home") {
             iconName = focused ? "account-group" : "account-group-outline";
             isMaterialIcon = true;
-          } else if (route.name === "Search") {
-            iconName = focused ? "search" : "search-outline";
-            isMaterialIcon = false;
+          } else if (route.name === "Class") {
+            iconName = focused ? "view-dashboard" : "view-dashboard-outline";
+            isMaterialIcon = true;
           } else if (route.name === "Notifications") {
             iconName = focused ? "notifications" : "notifications-outline";
             isMaterialIcon = false;
@@ -66,12 +68,12 @@ export default function BottomTabNav({navigation}) {
         }}
       />
       <Tab.Screen
-        name="Search"
-        component={SearchView}
+        name="Class"
+        component={ClassView}
         options={{
           headerShown: true,
           headerBackVisible: false,
-          title: "Search",
+          title: "Class",
           headerStyle: {
             backgroundColor: "#2B2343",
           },
