@@ -10,6 +10,7 @@ import {
 
 const dummyClasses = Array.from(Array(50).keys()).map((i) => ({
   title: `Class ${i + 1}`,
+  id: i,
 }));
 
 const Item = ({ item, onPress }) => (
