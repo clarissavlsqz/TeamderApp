@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import { A } from "@expo/html-elements";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -39,11 +39,13 @@ async function storeUserInfo(
   password,
   personality
 ) {
-  createUserWithEmailAndPassword(auth, email, password)
+  let userUID;
+  await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log(user);
+      userUID = user.uid;
+      console.log("TRY ", userUID);
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -51,14 +53,16 @@ async function storeUserInfo(
       console.log(errorCode, errorMessage);
     });
   try {
-    const docRef = await addDoc(collection(db, "users"), {
+    console.log(userUID);
+    const usersRef = collection(db, "users");
+    await setDoc(doc(usersRef, userUID), {
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
       personality: personality,
     });
-    console.log("Document written with ID: ", docRef.id);
+    console.log("Document written with ID: ", userUID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
