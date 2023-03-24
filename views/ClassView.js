@@ -1,5 +1,15 @@
-import React, { useState } from "react";
-import CreateClassView from "../views/CreateClassView";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  query,
+  where,
+  collection,
+  getDoc,
+  getDocs,
+  documentId,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -7,20 +17,54 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
+import { db, auth } from "../firebaseConfig";
 
-const dummyClasses = Array.from(Array(50).keys()).map((i) => ({
+const dummyClasses = Array.from(Array(5).keys()).map((i) => ({
   title: `Class ${i + 1}`,
   id: i,
 }));
 
 const Item = ({ item, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
-    <Text style={styles.class}>{item.title}</Text>
+    <Text style={styles.class}>{item.name}</Text>
   </TouchableOpacity>
 );
 
-export default function ClassView({navigation}) {
+export default function ClassView({ navigation }) {
+  const [userGroup, setUserGroup] = useState([]);
+  const [isWaiting, setIsWaiting] = useState(true);
+
+  useEffect(() => {
+    const fetchUsersGroups = async () => {
+      try {
+        const user = auth.currentUser;
+        if (user !== null) {
+          const usersGroupsRef = collection(db, "users", user.uid, "groups");
+          const unsubscribe = onSnapshot(usersGroupsRef, (querySnapshot) => {
+            const groups = [];
+            querySnapshot.forEach((doc) => {
+              var group = {};
+              group.name = doc.data().name;
+              group.uid = doc.data().uid;
+              groups.push(group);
+            });
+            setUserGroup(...userGroup, groups);
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchUsersGroups();
+  }, []);
+
+  useEffect(() => {
+    console.log(userGroup);
+    setIsWaiting(false);
+  }, [userGroup]);
+
   const renderItem = ({ item }) => {
     return <Item item={item} />;
   };
@@ -30,18 +74,16 @@ export default function ClassView({navigation}) {
       <StatusBar barStyle={"light-content"} />
 
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("CreateClass")
-        }
+        onPress={() => navigation.navigate("CreateClass")}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Create Class </Text>
       </TouchableOpacity>
 
       <FlatList
-        data={dummyClasses}
+        data={userGroup}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.uid}
       />
     </SafeAreaView>
   );
