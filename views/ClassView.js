@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CreateClassView from "../views/CreateClassView";
 import {
   FlatList,
   SafeAreaView,
@@ -19,7 +20,7 @@ const Item = ({ item, onPress }) => (
   </TouchableOpacity>
 );
 
-export default function ClassView() {
+export default function ClassView({navigation}) {
   const renderItem = ({ item }) => {
     return <Item item={item} />;
   };
