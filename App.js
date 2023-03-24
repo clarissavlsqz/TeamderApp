@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
 import LoginView from "./views/LoginView";
 import BottomTabNav from "./components/BottomTabNav";
+import AddGroupView from "./views/AddGroupView";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,11 @@ export default function App() {
           component={BottomTabNav}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+        name="AddGroup"
+        component={AddGroupView}
+        options={{ headerShown: true }}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

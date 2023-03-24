@@ -9,7 +9,7 @@ import { StyleSheet, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomTabNav() {
+export default function BottomTabNav({navigation}) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -76,8 +76,19 @@ export default function BottomTabNav() {
             backgroundColor: "#2B2343",
           },
           headerTintColor: "#F5F5F5",
+          headerRight: () => (
+            <View style={styles.createGroupIcon}>
+              <MaterialIcons
+                name="add"
+                color="#F5F5F5"
+                size={24}
+                onPress={() => navigation.navigate("AddGroup")}
+              />
+            </View>
+          ),
         }}
       />
+      
       <Tab.Screen
         name="Notifications"
         component={NotificationsView}
