@@ -6,12 +6,18 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  View,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import { A } from "@expo/html-elements";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { db, auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  useTogglePasswordVisibility,
+  useTogglePasswordVisibilitySignUp,
+} from "../hooks/useTogglePasswordVisibility";
+import { Ionicons } from "@expo/vector-icons";
 
 const personalityTypes = [
   { label: "INTJ", value: "INTJ" },
@@ -72,13 +78,16 @@ export default function SignUpView({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [passwordSignUp, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [personality, setPersonality] = useState("");
   const [passwordMessage, setPasswordMessage] = useState(false);
+  const { password, icon, onClickIcon } = useTogglePasswordVisibility();
+  const { passwordConf, iconConf, onClickIconConf } =
+    useTogglePasswordVisibilitySignUp();
 
   function validatePassword() {
-    if (password != confirmPassword) {
+    if (passwordSignUp != confirmPassword) {
       setPasswordMessage(true);
     } else {
       setPasswordMessage(false);
@@ -105,23 +114,58 @@ export default function SignUpView({ navigation }) {
         value={email}
         placeholder="Email"
         style={styles.textInput}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
-      <TextInput
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Password"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setConfirmPassword}
-        value={confirmPassword}
-        placeholder="Confirm password"
-        style={passwordMessage ? styles.textInputError : styles.textInput}
-        onBlur={validatePassword}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          onChangeText={setPassword}
+          value={passwordSignUp}
+          placeholder="Password"
+          style={styles.passwordInput}
+          secureTextEntry={password}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <Ionicons
+          name={icon}
+          color="black"
+          onPress={onClickIcon}
+          size={24}
+          style={styles.icon}
+        />
+      </View>
+
+      <View
+        style={
+          passwordMessage
+            ? styles.passwordErrorInputContainer
+            : styles.inputContainer
+        }
+      >
+        <TextInput
+          onChangeText={setConfirmPassword}
+          value={confirmPassword}
+          placeholder="Confirm password"
+          style={styles.passwordInput}
+          secureTextEntry={passwordConf}
+          onBlur={validatePassword}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <Ionicons
+          name={iconConf}
+          color="black"
+          onPress={onClickIconConf}
+          size={24}
+          style={styles.icon}
+        />
+      </View>
+
       {passwordMessage ? (
         <Text style={styles.passwordError}>Password does not match</Text>
       ) : null}
+
       <SelectList
         setSelected={setPersonality}
         data={personalityTypes}
@@ -144,7 +188,7 @@ export default function SignUpView({ navigation }) {
       </Text>
       <TouchableOpacity
         onPress={() =>
-          storeUserInfo(firstName, lastName, email, password, personality)
+          storeUserInfo(firstName, lastName, email, passwordSignUp, personality)
         }
         style={styles.button}
       >
@@ -168,13 +212,18 @@ const styles = StyleSheet.create({
   textInput: {
     borderBottomColor: "black",
     borderBottomWidth: 1,
-    width: "70%",
+    width: "74.8%",
     fontSize: 18,
     marginTop: 40,
   },
   textInputError: {
     borderBottomColor: "red",
     borderBottomWidth: 1,
+    width: "70%",
+    fontSize: 18,
+    marginTop: 40,
+  },
+  passwordInput: {
     width: "70%",
     fontSize: 18,
     marginTop: 40,
@@ -204,5 +253,20 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontFamily: "Poppins-Bold",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+  },
+  passwordErrorInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "red",
+  },
+  icon: {
+    paddingTop: 20,
   },
 });
