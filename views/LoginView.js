@@ -4,14 +4,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  View,
 } from "react-native";
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginView({ navigation }) {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const { password, icon, onClickIcon } = useTogglePasswordVisibility();
 
   const onLogin = (e) => {
     e.preventDefault();
@@ -31,18 +35,35 @@ export default function LoginView({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Email"
-        onChangeText={setLoginEmail}
-        value={loginEmail}
-      />
-      <TextInput
-        style={styles.textInput}
-        placeholder="Password"
-        onChangeText={setLoginPassword}
-        value={loginPassword}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.emailInput}
+          placeholder="Email"
+          onChangeText={setLoginEmail}
+          value={loginEmail}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          onChangeText={setLoginPassword}
+          value={loginPassword}
+          secureTextEntry={password}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <Ionicons
+          name={icon}
+          color="black"
+          onPress={onClickIcon}
+          size={24}
+          style={styles.icon}
+        />
+      </View>
       <TouchableOpacity style={styles.button} onPress={onLogin}>
         <Text style={styles.buttonText}> Login </Text>
       </TouchableOpacity>
@@ -62,14 +83,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
-  textInput: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
+  passwordInput: {
     width: "70%",
     fontSize: 18,
     marginTop: 40,
   },
-  textInputError: {
+  emailInput: {
+    width: "75%",
+    fontSize: 18,
+    marginTop: 40,
+  },
+  passwordInputError: {
     borderBottomColor: "red",
     borderBottomWidth: 1,
     width: "70%",
@@ -82,5 +106,13 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontFamily: "Poppins-Bold",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+  },
+  icon: {
+    paddingTop: 20,
   },
 });
