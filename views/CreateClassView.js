@@ -8,26 +8,36 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { db } from "../firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 import { getDocs } from "firebase/firestore";
 import { personalityTable, personalityWeightTable } from "../personalityTables";
 import { collection, query, update } from "firebase/firestore";
 
-async function storeUserInfo(className, classDesc, capacity) {
-  createClassID().catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode, errorMessage);
-  });
+async function storeClassInfo(className, classDesc, capacity) {
   try {
+    let classDocID;
     const docRef = await addDoc(collection(db, "class"), {
       className: className,
       classDesc: classDesc,
       capacity: capacity,
       classID: docRef.id.substring(1, 5),
     });
-    console.log("Document written with ID: ", docRef.id);
-    console.log(classID);
+    classDocID = docRef.id.substring(1, 5);
+    console.log("Document written with ID: ", docRef.id.substring(1, 5));
+    await addClassToUser(className, classDocID);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
+async function addClassToUser(className, classID) {
+  try {
+    userID = auth.currentUser.uid;
+    const usersGroupsRef = collection(db, "users", "groups");
+    await setDoc(doc(usersGroupsRef, classID), {
+      name: className,
+    });
+    console.log("Document written with ID: ", userUID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
