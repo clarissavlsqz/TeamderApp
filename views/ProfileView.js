@@ -1,5 +1,4 @@
-import { collection, getDocs, where, query } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import React from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -7,49 +6,35 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { auth, db } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
+import { useUserContext } from "../src/context/user-context";
 
 export default function ProfileView() {
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userPersonality, setUserPersonality] = useState("");
-
-  useEffect(() => {
-    async function fetchUserData() {
-      const user = auth.currentUser;
-      if (user !== null) {
-        setUserEmail(user.email);
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("email", "==", userEmail));
-
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          setUserName(doc.get("firstName") + " " + doc.get("lastName"));
-          setUserPersonality(doc.get("personality"));
-        });
-      }
-    }
-    fetchUserData();
-  }, [userEmail, userName, userPersonality]);
+  const { user } = useUserContext();
 
   const onLogout = () => {
     auth.signOut();
   };
+
+  if (user === null) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={"light-content"} />
       <Text style={styles.profileText}>
         {" "}
-        <Text style={styles.boldText}>Name:</Text> {userName}
+        <Text style={styles.boldText}>Name:</Text> {user.firstName}{" "}
+        {user.lastName}
       </Text>
       <Text style={styles.profileText}>
         {" "}
-        <Text style={styles.boldText}>Email:</Text> {userEmail}
+        <Text style={styles.boldText}>Email:</Text> {user.email}
       </Text>
       <Text style={styles.profileText}>
         {" "}
-        <Text style={styles.boldText}>Personality:</Text> {userPersonality}
+        <Text style={styles.boldText}>Personality:</Text> {user.personality}
       </Text>
 
       <TouchableOpacity style={styles.button} onPress={onLogout}>
