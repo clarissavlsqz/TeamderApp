@@ -1,4 +1,3 @@
-import { StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import InitialView from "./views/InitialView";
 import { useFonts } from "expo-font";
@@ -11,7 +10,7 @@ import LoginView from "./views/LoginView";
 import BottomTabNav from "./components/BottomTabNav";
 import AddGroupView from "./views/AddGroupView";
 import { auth } from "./firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import CreateClassView from "./views/CreateClassView";
 
 const Stack = createNativeStackNavigator();
@@ -21,19 +20,24 @@ export default function App() {
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
   });
-  const [authLoaded, setAuthLoaded] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+
+  const [user, userLoading, error] = useAuthState(auth);
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
-
-    onAuthStateChanged(auth, (user) => {
-      setAuthLoaded(true);
-      setLoggedIn(user !== null);
-    });
   }, []);
 
-  if (!fontsLoaded || !authLoaded) {
+  if (error) {
+    SplashScreen.hideAsync();
+
+    return (
+      <div>
+        <p>Error: {error.message}</p>
+      </div>
+    );
+  }
+
+  if (!fontsLoaded || userLoading) {
     return null;
   }
 
@@ -41,7 +45,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {!loggedIn ? (
+      {user === null ? (
         <Stack.Navigator initialRouteName="Initial">
           <Stack.Screen
             options={{ headerShown: false }}
