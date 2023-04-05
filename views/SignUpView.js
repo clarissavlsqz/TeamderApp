@@ -16,7 +16,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   useTogglePasswordVisibility,
   useTogglePasswordVisibilitySignUp,
-} from "../hooks/useTogglePasswordVisibility";
+} from "../src/hooks/useTogglePasswordVisibility";
 import { Ionicons } from "@expo/vector-icons";
 
 const personalityTypes = [

@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignUpView from "./views/SignUpView";
 import LoginView from "./views/LoginView";
-import BottomTabNav from "./components/BottomTabNav";
+import BottomTabNav from "./src/components/BottomTabNav";
 import AddGroupView from "./views/AddGroupView";
 import { auth } from "./firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
