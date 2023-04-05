@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import HomeView from "../views/HomeView";
-import ClassView from "../views/ClassView";
-import NotificationsView from "../views/NotificationsView";
-import ProfileView from "../views/ProfileView";
+import HomeView from "../../views/HomeView";
+import ClassView from "../../views/ClassView";
+import NotificationsView from "../../views/NotificationsView";
+import ProfileView from "../../views/ProfileView";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 
