@@ -16,7 +16,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   useTogglePasswordVisibility,
   useTogglePasswordVisibilitySignUp,
-} from "../hooks/useTogglePasswordVisibility";
+} from "../src/hooks/useTogglePasswordVisibility";
 import { Ionicons } from "@expo/vector-icons";
 
 const personalityTypes = [
@@ -65,7 +65,6 @@ async function storeUserInfo(
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: password,
       personality: personality,
     });
     console.log("Document written with ID: ", userUID);

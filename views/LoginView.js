@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
+import { useTogglePasswordVisibility } from "../src/hooks/useTogglePasswordVisibility";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginView({ navigation }) {
