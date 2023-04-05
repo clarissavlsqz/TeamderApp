@@ -65,7 +65,6 @@ async function storeUserInfo(
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: password,
       personality: personality,
     });
     console.log("Document written with ID: ", userUID);

@@ -1,4 +1,13 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const FETCH_USER = "FETCH_USER";
@@ -24,24 +33,33 @@ export const fetchUser = (dispatch) => {
   }
 
   const usersRef = collection(db, "users");
-  const q = query(usersRef, where("email", "==", user.email));
 
-  getDocs(q)
-    .then((querySnapshot) => {
-      if (querySnapshot.docs.length === 0) {
-        return;
-      }
-
-      const doc = querySnapshot.docs[0];
-
+  getDoc(doc(usersRef, user.uid))
+    .then((userDoc) => {
       dispatch(
         fetchUserResponse({
-          firstName: doc.get("firstName"),
-          lastName: doc.get("lastName"),
-          personality: doc.get("personality"),
+          firstName: userDoc.get("firstName"),
+          lastName: userDoc.get("lastName"),
+          personality: userDoc.get("personality"),
           email: user.email,
         })
       );
     })
     .catch(() => {});
+};
+
+export const updateUserProfile = (profile, dispatch) => {
+  const user = auth.currentUser;
+
+  if (user === null) {
+    return;
+  }
+
+  const usersRef = collection(db, "users");
+
+  updateDoc(doc(usersRef, user.uid), profile).then(() => {
+    fetchUser(dispatch)
+  }).catch((err) => {
+    console.error(err);
+  });
 };

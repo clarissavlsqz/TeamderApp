@@ -1,8 +1,12 @@
-import React, { useReducer, useEffect, createContext } from 'react';
-import { useContext } from 'react';
-import { fetchUser, reducer } from '../reducers/user-reducer';
-import { auth } from '../../firebaseConfig';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import React, { useReducer, useEffect, createContext } from "react";
+import { useContext } from "react";
+import {
+  fetchUser,
+  reducer,
+  updateUserProfile,
+} from "../reducers/user-reducer";
+import { auth } from "../../firebaseConfig";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const UserContext = createContext();
 
@@ -24,12 +28,14 @@ export const useUserContext = () => {
   const context = useContext(UserContext);
 
   if (!context) {
-    throw new Error('useUserContext must be used within a AppProvider');
+    throw new Error("useUserContext must be used within a AppProvider");
   }
 
-  const [state, _dispatch] = context;
+  const [state, dispatch] = context;
 
   return {
     user: state.user,
+
+    updateProfile: (data) => updateUserProfile(data, dispatch),
   };
 };
