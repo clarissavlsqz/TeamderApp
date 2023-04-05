@@ -12,6 +12,7 @@ import AddGroupView from "./views/AddGroupView";
 import { auth } from "./firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import CreateClassView from "./views/CreateClassView";
+import AppProvider from "./src/components/AppProvider";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,44 +45,46 @@ export default function App() {
   SplashScreen.hideAsync();
 
   return (
-    <NavigationContainer>
-      {user === null ? (
-        <Stack.Navigator initialRouteName="Initial">
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Initial"
-            component={InitialView}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="SignUp"
-            component={SignUpView}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginView}
-          />
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator initialRouteName="Tab">
-          <Stack.Screen
-            name="Tab"
-            component={BottomTabNav}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AddGroup"
-            component={AddGroupView}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="CreateClass"
-            component={CreateClassView}
-            options={{ headerShown: true }}
-          />
-        </Stack.Navigator>
-      )}
-    </NavigationContainer>
+    <AppProvider>
+      <NavigationContainer>
+        {user === null ? (
+          <Stack.Navigator initialRouteName="Initial">
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Initial"
+              component={InitialView}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="SignUp"
+              component={SignUpView}
+            />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Login"
+              component={LoginView}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Stack.Navigator initialRouteName="Tab">
+            <Stack.Screen
+              name="Tab"
+              component={BottomTabNav}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AddGroup"
+              component={AddGroupView}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="CreateClass"
+              component={CreateClassView}
+              options={{ headerShown: true }}
+            />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    </AppProvider>
   );
 }
