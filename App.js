@@ -13,6 +13,7 @@ import { auth } from "./firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import CreateClassView from "./views/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
+import EditProfile from "./views/EditProfileView";
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,11 @@ export default function App() {
             <Stack.Screen
               name="AddGroup"
               component={AddGroupView}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
               options={{ headerShown: true }}
             />
             <Stack.Screen

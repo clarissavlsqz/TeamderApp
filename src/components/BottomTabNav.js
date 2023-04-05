@@ -115,6 +115,16 @@ export default function BottomTabNav({navigation}) {
             backgroundColor: "#2B2343",
           },
           headerTintColor: "#F5F5F5",
+          headerRight: () => (
+            <View style={styles.createGroupIcon}>
+              <MaterialIcons
+                name="edit"
+                color="#F5F5F5"
+                size={24}
+                onPress={() => navigation.push("EditProfile")}
+              />
+            </View>
+          ),
         }}
       />
     </Tab.Navigator>
