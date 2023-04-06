@@ -12,6 +12,9 @@ import { db, auth } from "../firebaseConfig";
 import { getDocs } from "firebase/firestore";
 import { personalityTable, personalityWeightTable } from "../personalityTables";
 import { collection, query, update } from "firebase/firestore";
+import { customAlphabet } from "nanoid/non-secure";
+
+const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
 async function storeClassInfo(className, classDesc, capacity) {
   try {
@@ -85,7 +88,7 @@ export default function CreateClassView({ navigation }) {
       <Text></Text>
       <Text></Text>
       <Text>This is your unique class id: </Text>
-      <Text>897132782</Text>
+      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
       <TextInput
         onChangeText={setGroupNumber}
