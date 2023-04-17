@@ -6,8 +6,8 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { auth } from "../firebaseConfig";
-import { useUserContext } from "../src/context/user-context";
+import { auth } from "../../firebaseConfig";
+import { useUserContext } from "../context/user-context";
 
 export default function ProfileView() {
   const { user } = useUserContext();

@@ -2,9 +2,9 @@ import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { A } from "@expo/html-elements";
 import { useForm, useWatch } from "react-hook-form";
-import DropdownComponent from "../src/components/PersonalityDropdown";
-import InputBox from "../src/components/InputBox";
-import { useUserContext } from "../src/context/user-context";
+import DropdownComponent from "../../components/PersonalityDropdown";
+import InputBox from "../../components/InputBox";
+import { useUserContext } from "../../context/user-context";
 
 export default function SignUpView({ navigation }) {
   const {
