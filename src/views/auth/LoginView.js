@@ -7,9 +7,9 @@ import {
   View,
 } from "react-native";
 import { useState } from "react";
-import { auth } from "../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useTogglePasswordVisibility } from "../src/hooks/useTogglePasswordVisibility";
+import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginView({ navigation }) {
