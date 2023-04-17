@@ -2,8 +2,23 @@ import React from "react";
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import constants from "../constants";
 import { Controller } from "react-hook-form";
+import { Ionicons } from "@expo/vector-icons";
+import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 
-const InputBox = ({ control, errors, rules, name, label }) => {
+const InputBox = ({
+  control,
+  errors,
+  rules,
+  name,
+  label,
+  password = false,
+}) => {
+  const {
+    password: passwordEnabled,
+    icon,
+    onClickIcon,
+  } = useTogglePasswordVisibility();
+
   return (
     <>
       <View style={styles.root}>
@@ -18,7 +33,7 @@ const InputBox = ({ control, errors, rules, name, label }) => {
                 <TextInput
                   placeholderTextColor={constants.BACKGROUND_COLOR}
                   style={styles.input}
-                  secureTextEntry={false}
+                  secureTextEntry={passwordEnabled && password}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -27,6 +42,16 @@ const InputBox = ({ control, errors, rules, name, label }) => {
               name={name}
             />
           </View>
+
+          {password && (
+            <Ionicons
+              name={icon}
+              color="black"
+              onPress={onClickIcon}
+              size={24}
+              style={styles.icon}
+            />
+          )}
         </View>
         {errors[name] && (
           <Text style={styles.error}>{errors[name].message}</Text>
