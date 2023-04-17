@@ -1,25 +1,28 @@
+/* eslint-disable react/jsx-filename-extension */
 import "react-native-gesture-handler";
-import InitialView from "./views/InitialView";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SignUpView from "./views/SignUpView";
-import LoginView from "./views/LoginView";
-import BottomTabNav from "./src/components/BottomTabNav";
-import AddGroupView from "./views/AddGroupView";
-import { auth } from "./firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
-import CreateClassView from "./views/CreateClassView";
+import InitialView from "./src/views/auth/InitialView";
+import SignUpView from "./src/views/auth/SignUpView";
+import LoginView from "./src/views/auth/LoginView";
+import BottomTabNav from "./src/components/BottomTabNav";
+import AddGroupView from "./src/views/main/AddGroupView";
+import { auth } from "./firebaseConfig";
+import CreateClassView from "./src/views/main/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
-import EditProfile from "./views/EditProfileView";
+import EditProfile from "./src/views/main/EditProfileView";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
+    // eslint-disable-next-line global-require
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
+    // eslint-disable-next-line global-require
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
   });
 
@@ -34,7 +37,10 @@ export default function App() {
 
     return (
       <div>
-        <p>Error: {error.message}</p>
+        <p>
+          Error:
+          {error.message}
+        </p>
       </div>
     );
   }

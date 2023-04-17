@@ -1,17 +1,20 @@
+/* eslint-disable react/no-unstable-nested-components */
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import HomeView from "../../views/HomeView";
-import ClassView from "../../views/ClassView";
-import NotificationsView from "../../views/NotificationsView";
-import ProfileView from "../../views/ProfileView";
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
+import HomeView from "../views/main/HomeView";
+import ClassView from "../views/main/ClassView";
+import NotificationsView from "../views/main/NotificationsView";
+import ProfileView from "../views/main/ProfileView";
 
 const Tab = createBottomTabNavigator();
 
-
-
-export default function BottomTabNav({navigation}) {
+export default function BottomTabNav({ navigation }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -90,7 +93,7 @@ export default function BottomTabNav({navigation}) {
           ),
         }}
       />
-      
+
       <Tab.Screen
         name="Notifications"
         component={NotificationsView}

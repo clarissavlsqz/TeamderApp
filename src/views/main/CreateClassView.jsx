@@ -1,31 +1,30 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  Alert,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-
-import { db, auth } from "../firebaseConfig";
-import { getDocs } from "firebase/firestore";
-import { personalityTable, personalityWeightTable } from "../personalityTables";
-import { collection, query, update } from "firebase/firestore";
+import { getDocs, collection, setDoc, doc, addDoc } from "firebase/firestore";
 import { customAlphabet } from "nanoid/non-secure";
+import {
+  personalityTable,
+  personalityWeightTable,
+} from "../../../personalityTables";
+import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
 async function storeClassInfo(className, classDesc, capacity) {
   try {
-    let classDocID;
     const docRef = await addDoc(collection(db, "class"), {
-      className: className,
-      classDesc: classDesc,
-      capacity: capacity,
+      className,
+      classDesc,
+      capacity,
       classID: docRef.id.substring(1, 5),
     });
-    classDocID = docRef.id.substring(1, 5);
+    const classDocID = docRef.id.substring(1, 5);
     console.log("Document written with ID: ", docRef.id.substring(1, 5));
     await addClassToUser(className, classDocID);
   } catch (e) {
@@ -35,27 +34,27 @@ async function storeClassInfo(className, classDesc, capacity) {
 
 async function addClassToUser(className, classID) {
   try {
-    userID = auth.currentUser.uid;
+    const userID = auth.currentUser.uid;
     const usersGroupsRef = collection(db, "users", "groups");
     await setDoc(doc(usersGroupsRef, classID), {
       name: className,
     });
-    console.log("Document written with ID: ", userUID);
+    console.log("Document written with ID: ", userID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
 
-export default function CreateClassView({ navigation }) {
+export default function CreateClassView() {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
   const [groupNumber, setGroupNumber] = useState("");
-  //const [classIdMessage, setClassIdMessage] = useState(false);
+  // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let's create your class</Text>
+      <Text style={styles.header}>Let&apos;s create your class</Text>
       <TextInput
         onChangeText={setClassName}
         value={className}
@@ -76,17 +75,17 @@ export default function CreateClassView({ navigation }) {
       />
 
       <TouchableOpacity
-        onPress={() => storeUserInfo(className, classDesc, capacity)}
+        onPress={() => storeClassInfo(className, classDesc, capacity)}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Create </Text>
       </TouchableOpacity>
-      <Text></Text>
-      <Text></Text>
-      <Text></Text>
-      <Text></Text>
-      <Text></Text>
-      <Text></Text>
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
       <Text>This is your unique class id: </Text>
       <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
@@ -173,11 +172,11 @@ function balanceGroups(nodes, links, numGroups) {
   const groups = Array.from({ length: numGroups }, () => new Set());
 
   // assign nodes to groups
-  for (let i = 0; i < numGroups; i++) {
+  for (let i = 0; i < numGroups; i += 1) {
     for (
       let j = i * groupSize;
       j < (i + 1) * groupSize && j < shuffledNodes.length;
-      j++
+      j += 1
     ) {
       groups[i].add(shuffledNodes[j]);
     }
@@ -192,7 +191,7 @@ function balanceGroups(nodes, links, numGroups) {
         .flat()
         .filter((node) => !group.has(node))
         .reduce((linkCount, node) => {
-          const nodeGroup = groups.find((group) => group.has(node));
+          const nodeGroup = groups.find((group2) => group2.has(node));
           if (!nodeGroup) {
             return linkCount;
           }
@@ -204,8 +203,8 @@ function balanceGroups(nodes, links, numGroups) {
     const groupLinks = groupLinkArray.reduce((sum, value) => sum + value, 0);
     const averageLinks = groupLinks / numGroups;
 
-    let maxIndex = groupLinkArray.indexOf(Math.max(...groupLinkArray));
-    let minIndex = groupLinkArray.indexOf(Math.min(...groupLinkArray));
+    const maxIndex = groupLinkArray.indexOf(Math.max(...groupLinkArray));
+    const minIndex = groupLinkArray.indexOf(Math.min(...groupLinkArray));
 
     // if the difference between the maximum and minimum number of links is less than the average,
     // then the groups are balanced and we can exit the loop
@@ -226,7 +225,7 @@ function balanceGroups(nodes, links, numGroups) {
     groups[maxIndex].delete(maxNode);
     groups[minIndex].add(maxNode);
 
-    iterations++;
+    iterations += 1;
   }
 
   return groups.map((group) => Array.from(group));
@@ -240,19 +239,19 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
   const docs = [];
   const ids = [];
   const querySnapshot = await getDocs(collection(db, "users"));
-  querySnapshot.forEach((doc) => {
+  querySnapshot.forEach((doc2) => {
     docs.push({
-      id: doc.id,
-      personality: doc.data().personality,
+      id: doc2.id,
+      personality: doc2.data().personality,
     });
-    ids.push(doc.id);
+    ids.push(doc2.id);
   });
 
   const pairs = [];
-  for (let i = 0; i < ids.length; i++) {
-    for (let j = i + 1; j < ids.length; j++) {
-      personality1 = docs.find((doc) => doc.id === ids[i]).personality;
-      personality2 = docs.find((doc) => doc.id === ids[j]).personality;
+  for (let i = 0; i < ids.length; i += 1) {
+    for (let j = i + 1; j < ids.length; j += 1) {
+      const personality1 = docs.find((doc2) => doc2.id === ids[i]).personality;
+      const personality2 = docs.find((doc2) => doc2.id === ids[j]).personality;
 
       const personality1Index = personalityTable.find(
         (obj) => obj.personality === personality1
@@ -261,7 +260,7 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
         (obj) => obj.personality === personality2
       );
 
-      pweight =
+      const pweight =
         personalityWeightTable[personality1Index.index][
           personality2Index.index
         ];
@@ -277,24 +276,25 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
   console.log(pairs);
 
   const groupsFound = balanceGroups(ids, pairs, groupNumber);
-  if (groupNumber == "") {
+  if (groupNumber === "") {
+    // eslint-disable-next-line no-param-reassign
     groupNumber = 2;
   }
 
   console.log(groupsFound);
 
-  //const querySnapshot2 = await getDocs(collection(db, "users"));
+  // const querySnapshot2 = await getDocs(collection(db, "users"));
 
-  let groupId = 1000;
-  for (let i = 0; i < groupsFound.length; i++) {
+  const groupId = 1000;
+  for (let i = 0; i < groupsFound.length; i += 1) {
     const subList = groupsFound[i];
-    for (let j = 0; j < subList.length; j++) {
-      groupIndex = i;
+    for (let j = 0; j < subList.length; j += 1) {
+      const groupIndex = i;
       // Update a field in a document using a query
-      //const documentsRef = collection(db, 'users');
-      //const q = query(documentsRef);
-      //console.log(documentsRef)
-      //update(q, { groups: groupId+groupIndex })
+      // const documentsRef = collection(db, 'users');
+      // const q = query(documentsRef);
+      // console.log(documentsRef)
+      // update(q, { groups: groupId+groupIndex })
       //  .then(() => {
       //    console.log('Field updated successfully!');
       //  })
@@ -302,9 +302,9 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
       //    console.error('Error updating field:', error);
       //  });
 
-      //console.log(doc.id, groupId+groupIndex)
+      // console.log(doc.id, groupId+groupIndex)
     }
   }
 
-  //updateGroups(querySnapshot2, groupsFound)
+  // updateGroups(querySnapshot2, groupsFound)
 }

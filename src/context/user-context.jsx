@@ -1,5 +1,12 @@
-import React, { useReducer, useEffect, createContext } from "react";
-import { useContext } from "react";
+import React, {
+  useReducer,
+  useEffect,
+  createContext,
+  useContext,
+  useMemo,
+} from "react";
+
+import { useAuthState } from "react-firebase-hooks/auth";
 import {
   createUserProfile,
   fetchUser,
@@ -7,11 +14,10 @@ import {
   updateUserProfile,
 } from "../reducers/user-reducer";
 import { auth } from "../../firebaseConfig";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 export const UserContext = createContext();
 
-export const UserContextProvider = (props) => {
+export function UserContextProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
   });
@@ -22,8 +28,17 @@ export const UserContextProvider = (props) => {
     fetchUser(dispatch);
   }, [user]);
 
-  return <UserContext.Provider value={[state, dispatch]} {...props} />;
-};
+  const dispatchStateProvider = useMemo(
+    () => [state, dispatch],
+    [state, dispatch]
+  );
+
+  return (
+    <UserContext.Provider value={dispatchStateProvider}>
+      {children}
+    </UserContext.Provider>
+  );
+}
 
 export const useUserContext = () => {
   const context = useContext(UserContext);

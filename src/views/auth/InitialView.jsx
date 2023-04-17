@@ -1,14 +1,7 @@
 import React from "react";
-import {
-  Alert,
-  Button,
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Image } from "expo-image";
-import LocalImages from "../assets/images/LocalImages";
+import LocalImages from "../../../assets/images/LocalImages";
 
 export default function InitialView({ navigation }) {
   return (
