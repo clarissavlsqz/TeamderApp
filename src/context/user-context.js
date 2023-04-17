@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect, createContext } from "react";
 import { useContext } from "react";
 import {
+  createUserProfile,
   fetchUser,
   reducer,
   updateUserProfile,
@@ -37,5 +38,6 @@ export const useUserContext = () => {
     user: state.user,
 
     updateProfile: (data) => updateUserProfile(data, dispatch),
+    createUser: (data) => createUserProfile(data, dispatch),
   };
 };
