@@ -1,18 +1,11 @@
 import React from "react";
 import { View, StyleSheet, TextInput, Text } from "react-native";
-import constants from "../constants";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
+import constants from "../constants";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 
-const InputBox = ({
-  control,
-  errors,
-  rules,
-  name,
-  label,
-  password = false,
-}) => {
+function InputBox({ control, errors, rules, name, label, password = false }) {
   const {
     password: passwordEnabled,
     icon,
@@ -20,46 +13,42 @@ const InputBox = ({
   } = useTogglePasswordVisibility();
 
   return (
-    <>
-      <View style={styles.root}>
-        <View style={styles.container}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.label}>{label}</Text>
+    <View style={styles.root}>
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.label}>{label}</Text>
 
-            <Controller
-              control={control}
-              rules={rules}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  placeholderTextColor={constants.BACKGROUND_COLOR}
-                  style={styles.input}
-                  secureTextEntry={passwordEnabled && password}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-              name={name}
-            />
-          </View>
-
-          {password && (
-            <Ionicons
-              name={icon}
-              color="black"
-              onPress={onClickIcon}
-              size={24}
-              style={styles.icon}
-            />
-          )}
+          <Controller
+            control={control}
+            rules={rules}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholderTextColor={constants.BACKGROUND_COLOR}
+                style={styles.input}
+                secureTextEntry={passwordEnabled && password}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name={name}
+          />
         </View>
-        {errors[name] && (
-          <Text style={styles.error}>{errors[name].message}</Text>
+
+        {password && (
+          <Ionicons
+            name={icon}
+            color="black"
+            onPress={onClickIcon}
+            size={24}
+            style={styles.icon}
+          />
         )}
       </View>
-    </>
+      {errors[name] && <Text style={styles.error}>{errors[name].message}</Text>}
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   root: {

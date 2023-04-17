@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { Controller } from "react-hook-form";
 import constants from "../constants";
 
@@ -24,7 +23,7 @@ const data = [
   { label: "ESFP", value: "ESFP" },
 ].sort(({ label: label1 }, { label: label2 }) => label1.localeCompare(label2));
 
-const DropdownComponent = ({ control, errors }) => {
+function DropdownComponent({ control, errors }) {
   return (
     <View style={styles.root}>
       <View style={styles.container}>
@@ -50,7 +49,7 @@ const DropdownComponent = ({ control, errors }) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={"Select personality"}
+                placeholder="Select personality"
                 value={value}
                 onBlur={onBlur}
                 onChange={onChange}
@@ -65,7 +64,7 @@ const DropdownComponent = ({ control, errors }) => {
       )}
     </View>
   );
-};
+}
 
 export default DropdownComponent;
 
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     marginBottom: 20,
     marginHorizontal: 20,
-  }, 
+  },
   container: {
     flexDirection: "row",
     alignItems: "center",

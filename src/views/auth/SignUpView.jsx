@@ -29,7 +29,7 @@ export default function SignUpView({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let's create your account</Text>
+      <Text style={styles.header}>Let&apos;s create your account</Text>
 
       <InputBox
         control={control}
@@ -111,8 +111,8 @@ export default function SignUpView({ navigation }) {
       <DropdownComponent control={control} errors={errors} />
 
       <Text style={styles.redirectText}>
-        If you don't know your personality, you can discover it by completing
-        this{" "}
+        If you don&apos;t know your personality, you can discover it by
+        completing this{" "}
         <A
           href="https://www.16personalities.com/free-personality-test"
           style={{ color: "blue", fontWeight: "bold" }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -6,8 +6,8 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
-import { useUserContext } from "../context/user-context";
+import { auth } from "../../../firebaseConfig";
+import { useUserContext } from "../../context/user-context";
 
 export default function ProfileView() {
   const { user } = useUserContext();
@@ -22,7 +22,7 @@ export default function ProfileView() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle="light-content" />
       <Text style={styles.profileText}>
         {" "}
         <Text style={styles.boldText}>Name:</Text> {user.firstName}{" "}

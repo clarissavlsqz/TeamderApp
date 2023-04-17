@@ -1,14 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const FETCH_USER = "FETCH_USER";
@@ -69,11 +60,11 @@ export const updateUserProfile = (profile, dispatch) => {
 
 export const createUserProfile = (
   { email, password, firstName, lastName, personality },
-  dispatch
+  _dispatch
 ) => {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
+      const { user } = userCredential;
 
       const usersRef = collection(db, "users");
       return setDoc(doc(usersRef, user.uid), {
