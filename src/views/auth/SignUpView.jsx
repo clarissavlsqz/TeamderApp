@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { A } from "@expo/html-elements";
 import { useForm, useWatch } from "react-hook-form";
-import DropdownComponent from "../../components/PersonalityDropdown";
+import PersonalityDropdown from "../../components/PersonalityDropdown";
 import InputBox from "../../components/InputBox";
 import { useUserContext } from "../../context/user-context";
 
@@ -20,11 +20,8 @@ const SignUpView = () => {
     name: "password",
   });
 
-  const onSubmit = ({ personality, ...rest }) => {
-    createUser({
-      personality: personality.value,
-      ...rest,
-    });
+  const onSubmit = (data) => {
+    createUser(data);
   };
 
   return (
@@ -108,7 +105,7 @@ const SignUpView = () => {
         password
       />
 
-      <DropdownComponent control={control} errors={errors} />
+      <PersonalityDropdown control={control} errors={errors} />
 
       <Text style={styles.redirectText}>
         If you don&apos;t know your personality, you can discover it by

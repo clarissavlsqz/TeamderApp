@@ -9,6 +9,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useUserContext } from "../../context/user-context";
 import InputBox from "../../components/InputBox";
+import PersonalityDropdown from "../../components/PersonalityDropdown";
 
 const EditProfile = ({ navigation }) => {
   const { user, updateProfile } = useUserContext();
@@ -73,6 +74,8 @@ const EditProfile = ({ navigation }) => {
         label="Email"
         name="email"
       />
+
+      <PersonalityDropdown control={control} errors={errors} />
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.buttonText}> Save </Text>
