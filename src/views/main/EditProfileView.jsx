@@ -96,14 +96,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  profileText: {
-    fontSize: 20,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  boldText: {
-    fontWeight: "bold",
-  },
   button: {
     marginTop: 10,
     backgroundColor: "#98D7D0",
@@ -114,13 +106,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontFamily: "Poppins-Bold",
-  },
-  textInput: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    width: "74.8%",
-    fontSize: 18,
-    marginTop: 40,
   },
 });
 
