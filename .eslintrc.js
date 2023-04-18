@@ -4,7 +4,11 @@ module.exports = {
     es2021: true,
   },
   extends: ["plugin:react/recommended", "airbnb", "prettier"],
-  overrides: [],
+  overrides: [
+    {
+      files: ["*.jsx", "*.js"],
+    },
+  ],
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
@@ -17,6 +21,10 @@ module.exports = {
     "import/prefer-default-export": 0,
     "react/prop-types": 0,
     "no-use-before-define": 0,
+    "react/function-component-definition": [
+      2,
+      { namedComponents: "arrow-function" },
+    ],
     "no-unused-vars": [
       "warn", // or "error"
       {

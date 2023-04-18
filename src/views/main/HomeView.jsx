@@ -10,16 +10,14 @@ import {
 } from "react-native";
 import { auth, db } from "../../../firebaseConfig";
 
-function TeamItem({ item }) {
-  return (
-    <View style={styles.item}>
-      <Text style={styles.team}>{item.team}</Text>
-      <Text style={styles.class}>{item.name}</Text>
-    </View>
-  );
-}
+const TeamItem = ({ item }) => (
+  <View style={styles.item}>
+    <Text style={styles.team}>{item.team}</Text>
+    <Text style={styles.class}>{item.name}</Text>
+  </View>
+);
 
-export default function HomeView() {
+const HomeView = () => {
   const [userTeam, setUserTeam] = useState([]);
 
   useEffect(() => {
@@ -65,7 +63,7 @@ export default function HomeView() {
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -87,3 +85,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+
+export default HomeView;

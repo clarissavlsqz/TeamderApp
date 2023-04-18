@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../../../firebaseConfig";
 import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 
-export default function LoginView() {
+const LoginView = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const { password, icon, onClickIcon } = useTogglePasswordVisibility();
@@ -69,7 +69,7 @@ export default function LoginView() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -116,3 +116,5 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 });
+
+export default LoginView;

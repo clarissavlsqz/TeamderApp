@@ -15,15 +15,13 @@ const dummyClasses = Array.from(Array(5).keys()).map((i) => ({
   id: i,
 }));
 
-function Item({ item, onPress }) {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
-      <Text style={styles.class}>{item.name}</Text>
-    </TouchableOpacity>
-  );
-}
+const Item = ({ item, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.item}>
+    <Text style={styles.class}>{item.name}</Text>
+  </TouchableOpacity>
+);
 
-export default function ClassView({ navigation }) {
+const ClassView = ({ navigation }) => {
   const [userGroup, setUserGroup] = useState([]);
   const [isWaiting, setIsWaiting] = useState(true);
 
@@ -76,7 +74,7 @@ export default function ClassView({ navigation }) {
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -103,3 +101,5 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 });
+
+export default ClassView;

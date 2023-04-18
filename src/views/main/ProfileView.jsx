@@ -9,7 +9,7 @@ import {
 import { auth } from "../../../firebaseConfig";
 import { useUserContext } from "../../context/user-context";
 
-export default function ProfileView() {
+const ProfileView = () => {
   const { user } = useUserContext();
 
   const onLogout = () => {
@@ -42,7 +42,7 @@ export default function ProfileView() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -69,3 +69,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
 });
+
+export default ProfileView;

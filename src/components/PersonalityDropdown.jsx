@@ -23,48 +23,46 @@ const data = [
   { label: "ESFP", value: "ESFP" },
 ].sort(({ label: label1 }, { label: label2 }) => label1.localeCompare(label2));
 
-function DropdownComponent({ control, errors }) {
-  return (
-    <View style={styles.root}>
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.label}>Personality</Text>
+const DropdownComponent = ({ control, errors }) => (
+  <View style={styles.root}>
+    <View style={styles.container}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.label}>Personality</Text>
 
-          <Controller
-            control={control}
-            rules={{
-              required: {
-                message: "This field is required.",
-                value: true,
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Dropdown
-                style={[styles.dropdown]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder="Select personality"
-                value={value}
-                onBlur={onBlur}
-                onChange={onChange}
-              />
-            )}
-            name="personality"
-          />
-        </View>
+        <Controller
+          control={control}
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Dropdown
+              style={[styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={data}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder="Select personality"
+              value={value}
+              onBlur={onBlur}
+              onChange={onChange}
+            />
+          )}
+          name="personality"
+        />
       </View>
-      {errors.personality && (
-        <Text style={styles.error}>{errors.personality.message}</Text>
-      )}
     </View>
-  );
-}
+    {errors.personality && (
+      <Text style={styles.error}>{errors.personality.message}</Text>
+    )}
+  </View>
+);
 
 export default DropdownComponent;
 
