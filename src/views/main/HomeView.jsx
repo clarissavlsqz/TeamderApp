@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import { onSnapshot, collection } from "firebase/firestore";
-import { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   FlatList,
   Text,
 } from "react-native";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../../firebaseConfig";
 
 const TeamItem = ({ item }) => (
   <View style={styles.item}>
@@ -17,7 +17,7 @@ const TeamItem = ({ item }) => (
   </View>
 );
 
-export default function HomeView() {
+const HomeView = () => {
   const [userTeam, setUserTeam] = useState([]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function HomeView() {
           const unsubscribe = onSnapshot(usersGroupsRef, (querySnapshot) => {
             const groups = [];
             querySnapshot.forEach((doc) => {
-              var group = {};
+              const group = {};
               group.name = doc.data().name;
               group.team = doc.data().team;
               groups.push(group);
@@ -55,7 +55,7 @@ export default function HomeView() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle="light-content" />
       <FlatList
         data={userTeam}
         renderItem={renderItem}
@@ -63,7 +63,7 @@ export default function HomeView() {
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -85,3 +85,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+
+export default HomeView;

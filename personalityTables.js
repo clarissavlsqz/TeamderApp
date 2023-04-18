@@ -1,25 +1,25 @@
 const personalities = [
-    { personality: "INTP", index: 0 },
-    { personality: "INTJ", index: 1 },
-    { personality: "INFP", index: 2 },
-    { personality: "INFJ", index: 3 },
-    { personality: "ISTP", index: 4 },
-    { personality: "ISTJ", index: 5 },
-    { personality: "ISFP", index: 6 },
-    { personality: "ISFJ", index: 7 },
-    { personality: "ENTP", index: 8 },
-    { personality: "ENTJ", index: 9 },
-    { personality: "ENFP", index: 10 },
-    { personality: "ENFJ", index: 11 },
-    { personality: "ESTP", index: 12 },
-    { personality: "ESTJ", index: 13 },
-    { personality: "ESFP", index: 14 },
-    { personality: "ESFJ", index: 15 },
+  { personality: "INTP", index: 0 },
+  { personality: "INTJ", index: 1 },
+  { personality: "INFP", index: 2 },
+  { personality: "INFJ", index: 3 },
+  { personality: "ISTP", index: 4 },
+  { personality: "ISTJ", index: 5 },
+  { personality: "ISFP", index: 6 },
+  { personality: "ISFJ", index: 7 },
+  { personality: "ENTP", index: 8 },
+  { personality: "ENTJ", index: 9 },
+  { personality: "ENFP", index: 10 },
+  { personality: "ENFJ", index: 11 },
+  { personality: "ESTP", index: 12 },
+  { personality: "ESTJ", index: 13 },
+  { personality: "ESFP", index: 14 },
+  { personality: "ESFJ", index: 15 },
 ];
 
 // create a 2D array
-var table = new Array(16);
-for (var i = 0; i < table.length; i++) {
+const table = new Array(16);
+for (let i = 0; i < table.length; i += 1) {
   table[i] = new Array(16);
 }
 
@@ -96,7 +96,6 @@ table[3][13] = 1;
 table[3][14] = 1;
 table[3][15] = 1;
 
-
 // ISTP
 table[4][0] = 3;
 table[4][1] = 3;
@@ -168,7 +167,6 @@ table[7][12] = 5;
 table[7][13] = 4;
 table[7][14] = 5;
 table[7][15] = 4;
-
 
 // ENTP
 table[8][0] = 4;
@@ -315,13 +313,12 @@ table[15][14] = 3;
 table[15][15] = 0;
 
 // print out the table
-//for (var i = 0; i < table.length; i++) {
+// for (var i = 0; i < table.length; i++) {
 // for (var j = 0; j < table[i].length; j++) {
 //   console.log(table[i][j] + " ");
 //  }
 //  console.log("\n");
-//}
+// }
 
 export const personalityTable = personalities;
-export const personalityWeightTable = table
-
+export const personalityWeightTable = table;

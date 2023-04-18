@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -6,10 +6,10 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { auth } from "../firebaseConfig";
-import { useUserContext } from "../src/context/user-context";
+import { auth } from "../../../firebaseConfig";
+import { useUserContext } from "../../context/user-context";
 
-export default function ProfileView() {
+const ProfileView = () => {
   const { user } = useUserContext();
 
   const onLogout = () => {
@@ -22,7 +22,7 @@ export default function ProfileView() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle="light-content" />
       <Text style={styles.profileText}>
         {" "}
         <Text style={styles.boldText}>Name:</Text> {user.firstName}{" "}
@@ -42,7 +42,7 @@ export default function ProfileView() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -69,3 +69,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
 });
+
+export default ProfileView;

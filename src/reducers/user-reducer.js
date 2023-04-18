@@ -1,13 +1,5 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 const FETCH_USER = "FETCH_USER";
@@ -57,9 +49,34 @@ export const updateUserProfile = (profile, dispatch) => {
 
   const usersRef = collection(db, "users");
 
-  updateDoc(doc(usersRef, user.uid), profile).then(() => {
-    fetchUser(dispatch)
-  }).catch((err) => {
-    console.error(err);
-  });
+  updateDoc(doc(usersRef, user.uid), profile)
+    .then(() => {
+      fetchUser(dispatch);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+export const createUserProfile = (
+  { email, password, firstName, lastName, personality },
+  _dispatch
+) => {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const { user } = userCredential;
+
+      const usersRef = collection(db, "users");
+      return setDoc(doc(usersRef, user.uid), {
+        firstName,
+        lastName,
+        email,
+        personality,
+      });
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    });
 };

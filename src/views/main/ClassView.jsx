@@ -1,15 +1,5 @@
-import { useFocusEffect } from "@react-navigation/native";
-import {
-  query,
-  where,
-  collection,
-  getDoc,
-  getDocs,
-  documentId,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
-import React, { useState, useEffect, useCallback } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -17,9 +7,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
-import { db, auth } from "../firebaseConfig";
+import { db, auth } from "../../../firebaseConfig";
 
 const dummyClasses = Array.from(Array(5).keys()).map((i) => ({
   title: `Class ${i + 1}`,
@@ -32,7 +21,7 @@ const Item = ({ item, onPress }) => (
   </TouchableOpacity>
 );
 
-export default function ClassView({ navigation }) {
+const ClassView = ({ navigation }) => {
   const [userGroup, setUserGroup] = useState([]);
   const [isWaiting, setIsWaiting] = useState(true);
 
@@ -45,7 +34,7 @@ export default function ClassView({ navigation }) {
           const unsubscribe = onSnapshot(usersGroupsRef, (querySnapshot) => {
             const groups = [];
             querySnapshot.forEach((doc) => {
-              var group = {};
+              const group = {};
               group.name = doc.data().name;
               group.uid = doc.data().uid;
               groups.push(group);
@@ -65,13 +54,11 @@ export default function ClassView({ navigation }) {
     setIsWaiting(false);
   }, [userGroup]);
 
-  const renderItem = ({ item }) => {
-    return <Item item={item} />;
-  };
+  const renderItem = ({ item }) => <Item item={item} />;
 
   return (
     <SafeAreaView>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle="light-content" />
 
       <TouchableOpacity
         onPress={() => navigation.navigate("CreateClass")}
@@ -87,7 +74,7 @@ export default function ClassView({ navigation }) {
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -114,3 +101,5 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 });
+
+export default ClassView;

@@ -20,24 +20,3 @@ export const useTogglePasswordVisibility = () => {
     onClickIcon,
   };
 };
-
-export const useTogglePasswordVisibilitySignUp = () => {
-  const [passwordConf, setPassword] = useState(true);
-  const [iconConf, setIcon] = useState("eye-off");
-
-  const onClickIconConf = () => {
-    if (iconConf === "eye") {
-      setIcon("eye-off");
-      setPassword(!passwordConf);
-    } else if (iconConf === "eye-off") {
-      setIcon("eye");
-      setPassword(!passwordConf);
-    }
-  };
-
-  return {
-    passwordConf,
-    iconConf,
-    onClickIconConf,
-  };
-};

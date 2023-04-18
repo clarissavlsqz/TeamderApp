@@ -4,13 +4,12 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
-import { auth } from "../firebaseConfig";
-import { useUserContext } from "../src/context/user-context";
-import { Controller, useForm } from "react-hook-form";
-import InputBox from "../src/components/InputBox";
+import { useForm } from "react-hook-form";
+import { useUserContext } from "../../context/user-context";
+import InputBox from "../../components/InputBox";
+import PersonalityDropdown from "../../components/PersonalityDropdown";
 
 const EditProfile = ({ navigation }) => {
   const { user, updateProfile } = useUserContext();
@@ -34,7 +33,7 @@ const EditProfile = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle="light-content" />
       <Text style={styles.header}>Edit your Profile</Text>
 
       <InputBox
@@ -76,17 +75,14 @@ const EditProfile = ({ navigation }) => {
         name="email"
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit(onSubmit)}
-      >
+      <PersonalityDropdown control={control} errors={errors} />
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
         <Text style={styles.buttonText}> Save </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
-
-export default EditProfile;
 
 const styles = StyleSheet.create({
   container: {
@@ -127,3 +123,5 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 });
+
+export default EditProfile;

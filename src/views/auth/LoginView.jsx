@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   SafeAreaView,
   TextInput,
@@ -6,13 +7,12 @@ import {
   Text,
   View,
 } from "react-native";
-import { useState } from "react";
-import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useTogglePasswordVisibility } from "../src/hooks/useTogglePasswordVisibility";
 import { Ionicons } from "@expo/vector-icons";
+import { auth } from "../../../firebaseConfig";
+import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 
-export default function LoginView({ navigation }) {
+const LoginView = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const { password, icon, onClickIcon } = useTogglePasswordVisibility();
@@ -22,7 +22,7 @@ export default function LoginView({ navigation }) {
     signInWithEmailAndPassword(auth, loginEmail, loginPassword)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
+        const { user } = userCredential;
         console.log("SIGNED IN!!");
         console.log(user);
       })
@@ -69,7 +69,7 @@ export default function LoginView({ navigation }) {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -116,3 +116,5 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 });
+
+export default LoginView;
