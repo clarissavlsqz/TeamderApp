@@ -23,7 +23,7 @@ const data = [
   { label: "ESFP", value: "ESFP" },
 ].sort(({ label: label1 }, { label: label2 }) => label1.localeCompare(label2));
 
-const DropdownComponent = ({ control, errors }) => (
+const PersonalityDropdown = ({ control, errors }) => (
   <View style={styles.root}>
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -51,7 +51,7 @@ const DropdownComponent = ({ control, errors }) => (
               placeholder="Select personality"
               value={value}
               onBlur={onBlur}
-              onChange={onChange}
+              onChange={(item) => onChange(item.value)}
             />
           )}
           name="personality"
@@ -64,7 +64,7 @@ const DropdownComponent = ({ control, errors }) => (
   </View>
 );
 
-export default DropdownComponent;
+export default PersonalityDropdown;
 
 const styles = StyleSheet.create({
   root: {
