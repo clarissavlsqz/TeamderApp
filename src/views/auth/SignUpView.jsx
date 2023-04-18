@@ -6,7 +6,7 @@ import DropdownComponent from "../../components/PersonalityDropdown";
 import InputBox from "../../components/InputBox";
 import { useUserContext } from "../../context/user-context";
 
-export default function SignUpView({ navigation }) {
+const SignUpView = () => {
   const {
     control,
     handleSubmit,
@@ -125,7 +125,7 @@ export default function SignUpView({ navigation }) {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -150,3 +150,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
 });
+
+export default SignUpView;

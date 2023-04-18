@@ -7,24 +7,22 @@ import {
   Text,
 } from "react-native";
 
-export default function DetailsScreen({ navigation }) {
-  return (
-    <SafeAreaView style={styles.container}>
-      <TextInput placeholder="Enter Group Code" style={styles.textInput} />
-      <TouchableOpacity
-        onPress={() =>
-          // Check if the group exists and pop a message if not
+const DetailsScreen = ({ navigation }) => (
+  <SafeAreaView style={styles.container}>
+    <TextInput placeholder="Enter Group Code" style={styles.textInput} />
+    <TouchableOpacity
+      onPress={() =>
+        // Check if the group exists and pop a message if not
 
-          // Returns to Tab after putting the code
-          navigation.navigate("Tab")
-        }
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}> Enter </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-}
+        // Returns to Tab after putting the code
+        navigation.navigate("Tab")
+      }
+      style={styles.button}
+    >
+      <Text style={styles.buttonText}> Enter </Text>
+    </TouchableOpacity>
+  </SafeAreaView>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -79,3 +77,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
 });
+
+export default DetailsScreen;

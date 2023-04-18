@@ -17,7 +17,7 @@ import { auth } from "../../firebaseConfig";
 
 export const UserContext = createContext();
 
-export function UserContextProvider({ children }) {
+export const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
   });
@@ -38,7 +38,7 @@ export function UserContextProvider({ children }) {
       {children}
     </UserContext.Provider>
   );
-}
+};
 
 export const useUserContext = () => {
   const context = useContext(UserContext);

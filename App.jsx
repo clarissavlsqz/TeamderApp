@@ -18,7 +18,7 @@ import EditProfile from "./src/views/main/EditProfileView";
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+const App = () => {
   const [fontsLoaded] = useFonts({
     // eslint-disable-next-line global-require
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
@@ -99,4 +99,6 @@ export default function App() {
       </NavigationContainer>
     </AppProvider>
   );
-}
+};
+
+export default App;

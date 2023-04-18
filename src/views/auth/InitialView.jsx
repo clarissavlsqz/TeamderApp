@@ -3,26 +3,24 @@ import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import LocalImages from "../../../assets/images/LocalImages";
 
-export default function InitialView({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Image source={LocalImages.logo} style={styles.logo} />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.text}> Login </Text>
-      </TouchableOpacity>
+const InitialView = ({ navigation }) => (
+  <View style={styles.container}>
+    <Image source={LocalImages.logo} style={styles.logo} />
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() => navigation.navigate("Login")}
+    >
+      <Text style={styles.text}> Login </Text>
+    </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("SignUp")}
-      >
-        <Text style={styles.text}> Sign Up </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
+    <TouchableOpacity
+      style={styles.button}
+      onPress={() => navigation.navigate("SignUp")}
+    >
+      <Text style={styles.text}> Sign Up </Text>
+    </TouchableOpacity>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -52,3 +50,5 @@ const styles = StyleSheet.create({
     height: 500,
   },
 });
+
+export default InitialView;

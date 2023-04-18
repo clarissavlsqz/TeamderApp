@@ -16,7 +16,7 @@ import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
-async function storeClassInfo(className, classDesc, capacity) {
+const storeClassInfo = async (className, classDesc, capacity) => {
   try {
     const docRef = await addDoc(collection(db, "class"), {
       className,
@@ -30,9 +30,9 @@ async function storeClassInfo(className, classDesc, capacity) {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-}
+};
 
-async function addClassToUser(className, classID) {
+const addClassToUser = async (className, classID) => {
   try {
     const userID = auth.currentUser.uid;
     const usersGroupsRef = collection(db, "users", "groups");
@@ -43,9 +43,9 @@ async function addClassToUser(className, classID) {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-}
+};
 
-export default function CreateClassView() {
+const CreateClassView = () => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -104,7 +104,7 @@ export default function CreateClassView() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -308,3 +308,5 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
 
   // updateGroups(querySnapshot2, groupsFound)
 }
+
+export default CreateClassView;

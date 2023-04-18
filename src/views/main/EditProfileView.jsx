@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { useUserContext } from "../../context/user-context";
 import InputBox from "../../components/InputBox";
 
-function EditProfile({ navigation }) {
+const EditProfile = ({ navigation }) => {
   const { user, updateProfile } = useUserContext();
   const {
     control,
@@ -79,9 +79,7 @@ function EditProfile({ navigation }) {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
-
-export default EditProfile;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -122,3 +120,5 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 });
+
+export default EditProfile;

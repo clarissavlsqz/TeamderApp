@@ -5,7 +5,14 @@ import { Ionicons } from "@expo/vector-icons";
 import constants from "../constants";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 
-function InputBox({ control, errors, rules, name, label, password = false }) {
+const InputBox = ({
+  control,
+  errors,
+  rules,
+  name,
+  label,
+  password = false,
+}) => {
   const {
     password: passwordEnabled,
     icon,
@@ -48,7 +55,7 @@ function InputBox({ control, errors, rules, name, label, password = false }) {
       {errors[name] && <Text style={styles.error}>{errors[name].message}</Text>}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   root: {
