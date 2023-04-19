@@ -15,18 +15,31 @@ import {
 import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
-const classID = `${nanoid(4)}-${nanoid(4)}`;
 
 const storeClassInfo = async (className, classDesc, capacity) => {
   try {
-    await setDoc(doc(db, "class", classID), {
-      name: className,
-      description: classDesc,
+    const docRef = await addDoc(collection(db, "class"), {
+      className,
+      classDesc,
       capacity,
-      id: classID,
-      admin: auth.currentUser.uid,
+      classID: docRef.id.substring(1, 5),
     });
-    console.log("Document written with ID: ", classID);
+    const classDocID = docRef.id.substring(1, 5);
+    console.log("Document written with ID: ", docRef.id.substring(1, 5));
+    await addClassToUser(className, classDocID);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+const addClassToUser = async (className, classID) => {
+  try {
+    const userID = auth.currentUser.uid;
+    const usersGroupsRef = collection(db, "users", "groups");
+    await setDoc(doc(usersGroupsRef, classID), {
+      name: className,
+    });
+    console.log("Document written with ID: ", userID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -35,6 +48,8 @@ const storeClassInfo = async (className, classDesc, capacity) => {
 const CreateClassView = () => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [groupNumber, setGroupNumber] = useState("");
   // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
@@ -52,20 +67,41 @@ const CreateClassView = () => {
         placeholder="Class Description"
         style={styles.textInput}
       />
+      <TextInput
+        onChangeText={setCapacity}
+        value={capacity}
+        placeholder="Class Capacity"
+        style={styles.textInput}
+      />
 
       <TouchableOpacity
         onPress={() => storeClassInfo(className, classDesc, capacity)}
         style={styles.button}
       >
-        <Text style={styles.buttonText}> Next </Text>
+        <Text style={styles.buttonText}> Create </Text>
       </TouchableOpacity>
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text>This is your unique class id: </Text>
+      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
+      <TextInput
+        onChangeText={setGroupNumber}
+        value={groupNumber}
+        placeholder="Number of groups"
+        style={styles.textInput}
+      />
+
+      <TouchableOpacity
+        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}> Assign groups </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
