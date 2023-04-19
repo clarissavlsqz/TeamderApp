@@ -21,7 +21,7 @@ const storeClassInfo = async (className, classDesc, capacity) => {
     const docRef = await addDoc(collection(db, "class"), {
       className,
       classDesc,
-      capacity: 0,
+      capacity,
       classID: docRef.id.substring(1, 5),
     });
     const classDocID = docRef.id.substring(1, 5);
@@ -48,6 +48,8 @@ const addClassToUser = async (className, classID) => {
 const CreateClassView = () => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [groupNumber, setGroupNumber] = useState("");
   // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
@@ -65,21 +67,41 @@ const CreateClassView = () => {
         placeholder="Class Description"
         style={styles.textInput}
       />
+      <TextInput
+        onChangeText={setCapacity}
+        value={capacity}
+        placeholder="Class Capacity"
+        style={styles.textInput}
+      />
 
       <TouchableOpacity
         onPress={() => storeClassInfo(className, classDesc, capacity)}
         style={styles.button}
       >
-        <Text style={styles.buttonText}> Next </Text>
+        <Text style={styles.buttonText}> Create </Text>
       </TouchableOpacity>
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text />
+      <Text>This is your unique class id: </Text>
+      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
+      <TextInput
+        onChangeText={setGroupNumber}
+        value={groupNumber}
+        placeholder="Number of groups"
+        style={styles.textInput}
+      />
 
+      <TouchableOpacity
+        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber)}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}> Assign groups </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -288,3 +310,5 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
 }
 
 export default CreateClassView;
+
+  
