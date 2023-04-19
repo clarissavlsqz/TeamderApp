@@ -57,16 +57,6 @@ const BottomTabNav = ({ navigation }) => (
           backgroundColor: "#2B2343",
         },
         headerTintColor: "#F5F5F5",
-        headerRight: () => (
-          <View style={styles.createGroupIcon}>
-            <MaterialIcons
-              name="group-add"
-              color="#F5F5F5"
-              size={24}
-              onPress={() => console.log("CREATE GROUP")}
-            />
-          </View>
-        ),
       }}
     />
     <Tab.Screen
@@ -86,7 +76,7 @@ const BottomTabNav = ({ navigation }) => (
               name="add"
               color="#F5F5F5"
               size={24}
-              onPress={() => navigation.navigate("AddGroup")}
+              onPress={() => navigation.navigate("AddClass")}
             />
           </View>
         ),

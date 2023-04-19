@@ -10,7 +10,7 @@ import InitialView from "./src/views/auth/InitialView";
 import SignUpView from "./src/views/auth/SignUpView";
 import LoginView from "./src/views/auth/LoginView";
 import BottomTabNav from "./src/components/BottomTabNav";
-import AddGroupView from "./src/views/main/AddGroupView";
+import AddClassView from "./src/views/main/AddClassView";
 import { auth } from "./firebaseConfig";
 import CreateClassView from "./src/views/main/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
@@ -80,8 +80,8 @@ const App = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AddGroup"
-              component={AddGroupView}
+              name="AddClass"
+              component={AddClassView}
               options={{ headerShown: true }}
             />
             <Stack.Screen
