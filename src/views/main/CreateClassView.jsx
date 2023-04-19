@@ -38,6 +38,7 @@ const addClassToUser = async (className) => {
     const usersGroupsRef = collection(db, "users", userID, "classes");
     await setDoc(doc(usersGroupsRef, classID), {
       name: className,
+      type: "owner",
     });
     console.log("Document written with ID: ", classID);
   } catch (e) {
