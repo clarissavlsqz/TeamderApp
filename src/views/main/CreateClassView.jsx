@@ -35,7 +35,7 @@ const storeClassInfo = async (className, classDesc, capacity) => {
 const addClassToUser = async (className) => {
   try {
     const userID = auth.currentUser.uid;
-    const usersGroupsRef = collection(db, "users", userID, "groups");
+    const usersGroupsRef = collection(db, "users", userID, "classes");
     await setDoc(doc(usersGroupsRef, classID), {
       name: className,
     });
