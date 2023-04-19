@@ -15,31 +15,31 @@ import {
 import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
+const classID = `${nanoid(4)}-${nanoid(4)}`;
 
 const storeClassInfo = async (className, classDesc, capacity) => {
   try {
-    const docRef = await addDoc(collection(db, "class"), {
-      className,
-      classDesc,
+    await setDoc(doc(db, "class", classID), {
+      name: className,
+      description: classDesc,
       capacity,
-      classID: docRef.id.substring(1, 5),
+      id: classID,
     });
-    const classDocID = docRef.id.substring(1, 5);
-    console.log("Document written with ID: ", docRef.id.substring(1, 5));
-    await addClassToUser(className, classDocID);
+    console.log("Document written with ID: ", classID);
+    await addClassToUser(className);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 
-const addClassToUser = async (className, classID) => {
+const addClassToUser = async (className) => {
   try {
     const userID = auth.currentUser.uid;
-    const usersGroupsRef = collection(db, "users", "groups");
+    const usersGroupsRef = collection(db, "users", userID, "groups");
     await setDoc(doc(usersGroupsRef, classID), {
       name: className,
     });
-    console.log("Document written with ID: ", userID);
+    console.log("Document written with ID: ", classID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -87,7 +87,7 @@ const CreateClassView = () => {
       <Text />
       <Text />
       <Text>This is your unique class id: </Text>
-      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
+      <Text>{classID}</Text>
 
       <TextInput
         onChangeText={setGroupNumber}
