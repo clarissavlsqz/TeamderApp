@@ -22,7 +22,7 @@ const Item = ({ item, onPress }) => (
 );
 
 const ClassView = ({ navigation }) => {
-  const [userGroup, setUserGroup] = useState([]);
+  const [userClass, setUserClass] = useState([]);
   const [isWaiting, setIsWaiting] = useState(true);
 
   useEffect(() => {
@@ -30,16 +30,16 @@ const ClassView = ({ navigation }) => {
       try {
         const user = auth.currentUser;
         if (user !== null) {
-          const usersGroupsRef = collection(db, "users", user.uid, "groups");
-          const unsubscribe = onSnapshot(usersGroupsRef, (querySnapshot) => {
-            const groups = [];
+          const usersClassesRef = collection(db, "users", user.uid, "classes");
+          const unsubscribe = onSnapshot(usersClassesRef, (querySnapshot) => {
+            const classes = [];
             querySnapshot.forEach((doc) => {
-              const group = {};
-              group.name = doc.data().name;
-              group.uid = doc.data().uid;
-              groups.push(group);
+              const classItem = {};
+              classItem.name = doc.data().name;
+              classItem.uid = doc.data().uid;
+              classes.push(classItem);
             });
-            setUserGroup(...userGroup, groups);
+            setUserClass(...userClass, classes);
           });
         }
       } catch (e) {
@@ -50,9 +50,9 @@ const ClassView = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log(userGroup);
+    console.log(userClass);
     setIsWaiting(false);
-  }, [userGroup]);
+  }, [userClass]);
 
   const renderItem = ({ item }) => <Item item={item} />;
 
@@ -68,7 +68,7 @@ const ClassView = ({ navigation }) => {
       </TouchableOpacity>
 
       <FlatList
-        data={userGroup}
+        data={userClass}
         renderItem={renderItem}
         keyExtractor={(item) => item.uid}
       />
