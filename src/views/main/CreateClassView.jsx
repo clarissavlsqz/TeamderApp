@@ -21,7 +21,7 @@ const storeClassInfo = async (className, classDesc, capacity) => {
     const docRef = await addDoc(collection(db, "class"), {
       className,
       classDesc,
-      capacity: 0,
+      capacity,
       classID: docRef.id.substring(1, 5),
     });
     const classDocID = docRef.id.substring(1, 5);
@@ -48,6 +48,8 @@ const addClassToUser = async (className, classID) => {
 const CreateClassView = () => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [groupNumber, setGroupNumber] = useState("");
   // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
@@ -65,6 +67,19 @@ const CreateClassView = () => {
         placeholder="Class Description"
         style={styles.textInput}
       />
+      <TextInput
+        onChangeText={setCapacity}
+        value={capacity}
+        placeholder="Class Capacity"
+        style={styles.textInput}
+      />
+
+      <TextInput
+        onChangeText={setGroupNumber}
+        value={groupNumber}
+        placeholder="Number of groups"
+        style={styles.textInput}
+      />
 
       <TouchableOpacity
         onPress={() => storeClassInfo(className, classDesc, capacity)}
@@ -79,7 +94,6 @@ const CreateClassView = () => {
       <Text />
       <Text />
       <Text />
-
     </SafeAreaView>
   );
 };
@@ -136,155 +150,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
 });
-
-function balanceGroups(nodes, links, numGroups) {
-  const graph = new Map(nodes.map((node) => [node, new Set()]));
-  links.forEach((link) => {
-    graph.get(link.source).add(link.target);
-    graph.get(link.target).add(link.source);
-  });
-
-  const nodeArray = Array.from(graph.keys());
-  const shuffledNodes = nodeArray.sort(() => Math.random() - 0.5); // shuffle the nodes randomly
-  const groupSize = Math.floor(nodeArray.length / numGroups);
-  const groups = Array.from({ length: numGroups }, () => new Set());
-
-  // assign nodes to groups
-  for (let i = 0; i < numGroups; i += 1) {
-    for (
-      let j = i * groupSize;
-      j < (i + 1) * groupSize && j < shuffledNodes.length;
-      j += 1
-    ) {
-      groups[i].add(shuffledNodes[j]);
-    }
-  }
-
-  let iterations = 0;
-  while (iterations < 100) {
-    // calculate the number of links between each group and all other groups
-    const groupLinkArray = groups.map((group) =>
-      Array.from(group)
-        .map((node) => [...graph.get(node)])
-        .flat()
-        .filter((node) => !group.has(node))
-        .reduce((linkCount, node) => {
-          const nodeGroup = groups.find((group2) => group2.has(node));
-          if (!nodeGroup) {
-            return linkCount;
-          }
-          return linkCount + 1;
-        }, 0)
-    );
-
-    // calculate the average number of links for each group
-    const groupLinks = groupLinkArray.reduce((sum, value) => sum + value, 0);
-    const averageLinks = groupLinks / numGroups;
-
-    const maxIndex = groupLinkArray.indexOf(Math.max(...groupLinkArray));
-    const minIndex = groupLinkArray.indexOf(Math.min(...groupLinkArray));
-
-    // if the difference between the maximum and minimum number of links is less than the average,
-    // then the groups are balanced and we can exit the loop
-    if (
-      groupLinkArray[maxIndex] - averageLinks <
-      averageLinks - groupLinkArray[minIndex]
-    ) {
-      break;
-    }
-
-    // move a node from the group with the most links to the group with the fewest links
-    const maxNode = Array.from(groups[maxIndex])[
-      Math.floor(Math.random() * groups[maxIndex].size)
-    ];
-    const minNode = Array.from(groups[minIndex])[
-      Math.floor(Math.random() * groups[minIndex].size)
-    ];
-    groups[maxIndex].delete(maxNode);
-    groups[minIndex].add(maxNode);
-
-    iterations += 1;
-  }
-
-  return groups.map((group) => Array.from(group));
-}
-
-async function balanceGroupsAndSaveToFirestore(groupNumber) {
-  console.log("hola");
-  // assuming you have already initialized the Firebase SDK and authenticated the user
-
-  // get a reference to the "users" collection
-  const docs = [];
-  const ids = [];
-  const querySnapshot = await getDocs(collection(db, "users"));
-  querySnapshot.forEach((doc2) => {
-    docs.push({
-      id: doc2.id,
-      personality: doc2.data().personality,
-    });
-    ids.push(doc2.id);
-  });
-
-  const pairs = [];
-  for (let i = 0; i < ids.length; i += 1) {
-    for (let j = i + 1; j < ids.length; j += 1) {
-      const personality1 = docs.find((doc2) => doc2.id === ids[i]).personality;
-      const personality2 = docs.find((doc2) => doc2.id === ids[j]).personality;
-
-      const personality1Index = personalityTable.find(
-        (obj) => obj.personality === personality1
-      );
-      const personality2Index = personalityTable.find(
-        (obj) => obj.personality === personality2
-      );
-
-      const pweight =
-        personalityWeightTable[personality1Index.index][
-          personality2Index.index
-        ];
-      pairs.push({
-        source: ids[i],
-        target: ids[j],
-        weight: pweight,
-      });
-    }
-  }
-
-  console.log(ids);
-  console.log(pairs);
-
-  const groupsFound = balanceGroups(ids, pairs, groupNumber);
-  if (groupNumber === "") {
-    // eslint-disable-next-line no-param-reassign
-    groupNumber = 2;
-  }
-
-  console.log(groupsFound);
-
-  // const querySnapshot2 = await getDocs(collection(db, "users"));
-
-  const groupId = 1000;
-  for (let i = 0; i < groupsFound.length; i += 1) {
-    const subList = groupsFound[i];
-    for (let j = 0; j < subList.length; j += 1) {
-      const groupIndex = i;
-      // Update a field in a document using a query
-      // const documentsRef = collection(db, 'users');
-      // const q = query(documentsRef);
-      // console.log(documentsRef)
-      // update(q, { groups: groupId+groupIndex })
-      //  .then(() => {
-      //    console.log('Field updated successfully!');
-      //  })
-      //  .catch((error) => {
-      //    console.error('Error updating field:', error);
-      //  });
-
-      // console.log(doc.id, groupId+groupIndex)
-    }
-  }
-
-  // updateGroups(querySnapshot2, groupsFound)
-}
 
 export default CreateClassView;
