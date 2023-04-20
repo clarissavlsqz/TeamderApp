@@ -7,14 +7,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { getDocs, collection, setDoc, doc, addDoc } from "firebase/firestore";
-import { customAlphabet } from "nanoid/non-secure";
-import {
-  personalityTable,
-  personalityWeightTable,
-} from "../../../personalityTables";
-import { db, auth } from "../../../firebaseConfig";
-
-const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
 const storeClassInfo = async (className, classDesc, capacity) => {
   try {
@@ -31,6 +23,10 @@ const storeClassInfo = async (className, classDesc, capacity) => {
     console.error("Error adding document: ", e);
   }
 };
+
+const addCapacityToClass = async (capacity) => {
+
+}
 
 const addClassToUser = async (className, classID) => {
   try {
@@ -54,23 +50,18 @@ const CreateClassView = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let&apos;s create your class</Text>
-      <TextInput
-        onChangeText={setClassName}
-        value={className}
-        placeholder="Class Name"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setClassDesc}
-        value={classDesc}
-        placeholder="Class Description"
-        style={styles.textInput}
-      />
+     
       <TextInput
         onChangeText={setCapacity}
         value={capacity}
         placeholder="Class Capacity"
+        style={styles.textInput}
+      />
+
+      <TextInput
+        onChangeText={setGroupNumber}
+        value={groupNumber}
+        placeholder="Number of groups"
         style={styles.textInput}
       />
 
@@ -86,22 +77,7 @@ const CreateClassView = () => {
       <Text />
       <Text />
       <Text />
-      <Text>This is your unique class id: </Text>
-      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
-      <TextInput
-        onChangeText={setGroupNumber}
-        value={groupNumber}
-        placeholder="Number of groups"
-        style={styles.textInput}
-      />
-
-      <TouchableOpacity
-        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber)}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}> Assign groups </Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

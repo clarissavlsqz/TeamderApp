@@ -16,35 +16,6 @@ import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
-const storeClassInfo = async (className, classDesc, capacity) => {
-  try {
-    const docRef = await addDoc(collection(db, "class"), {
-      className,
-      classDesc,
-      capacity,
-      classID: docRef.id.substring(1, 5),
-    });
-    const classDocID = docRef.id.substring(1, 5);
-    console.log("Document written with ID: ", docRef.id.substring(1, 5));
-    await addClassToUser(className, classDocID);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
-
-const addClassToUser = async (className, classID) => {
-  try {
-    const userID = auth.currentUser.uid;
-    const usersGroupsRef = collection(db, "users", "groups");
-    await setDoc(doc(usersGroupsRef, classID), {
-      name: className,
-    });
-    console.log("Document written with ID: ", userID);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
-
 const CreateClassView = () => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
@@ -55,46 +26,12 @@ const CreateClassView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Let&apos;s create your class</Text>
-      <TextInput
-        onChangeText={setClassName}
-        value={className}
-        placeholder="Class Name"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setClassDesc}
-        value={classDesc}
-        placeholder="Class Description"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setCapacity}
-        value={capacity}
-        placeholder="Class Capacity"
-        style={styles.textInput}
-      />
-
-      <TouchableOpacity
-        onPress={() => storeClassInfo(className, classDesc, capacity)}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}> Create </Text>
-      </TouchableOpacity>
-      <Text />
-      <Text />
-      <Text />
+      
       <Text />
       <Text />
       <Text />
       <Text>This is your unique class id: </Text>
       <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
-
-      <TextInput
-        onChangeText={setGroupNumber}
-        value={groupNumber}
-        placeholder="Number of groups"
-        style={styles.textInput}
-      />
 
       <TouchableOpacity
         onPress={() => balanceGroupsAndSaveToFirestore(groupNumber)}
