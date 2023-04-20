@@ -86,7 +86,7 @@ const CreateClassView = () => {
         onPress={() => storeClassInfo(className, classDesc, capacity)}
         style={styles.button}
       >
-        <Text style={styles.buttonText}> Next </Text>
+        <Text style={styles.buttonText}> Create Class </Text>
       </TouchableOpacity>
 
       <Text />
