@@ -6,7 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { getDocs, collection, setDoc, doc, addDoc } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  setDoc,
+  doc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { customAlphabet } from "nanoid/non-secure";
 import {
   personalityTable,
@@ -16,11 +23,13 @@ import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
-const CreateClassSummaryView = ({navigation}) => {
+const CreateClassView = ({ route }) => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
   const [groupNumber, setGroupNumber] = useState("");
+  const { classID } = route.params;
+
   // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
@@ -31,10 +40,10 @@ const CreateClassSummaryView = ({navigation}) => {
       <Text />
       <Text />
       <Text>This is your unique class id: </Text>
-      <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
+      <Text>{`${classID}`} </Text>
 
       <TouchableOpacity
-        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber, navigation)}
+        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber, classID)}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Assign groups </Text>
@@ -168,21 +177,33 @@ function balanceGroups(nodes, links, numGroups) {
   return groups.map((group) => Array.from(group));
 }
 
-async function balanceGroupsAndSaveToFirestore(groupNumber, navigation) {
-  navigation.navigate("Tab");
+async function balanceGroupsAndSaveToFirestore(groupNumber, classID) {
   console.log("hola");
   // assuming you have already initialized the Firebase SDK and authenticated the user
-
   // get a reference to the "users" collection
+  const students = [];
+  const querySnapshot = await getDocs(collection(db, "member"));
+  querySnapshot.forEach((doc2) => {
+    if (doc2.data().classid === classID) {
+      students.push(doc2.data().userid);
+    }
+  });
+
+  // console.log(students);
+
   const docs = [];
   const ids = [];
-  const querySnapshot = await getDocs(collection(db, "users"));
-  querySnapshot.forEach((doc2) => {
-    docs.push({
-      id: doc2.id,
-      personality: doc2.data().personality,
+  const querySnapshot2 = await getDocs(collection(db, "users"));
+  students.forEach((student) => {
+    querySnapshot2.forEach((doc2) => {
+      if (doc2.id === student) {
+        docs.push({
+          id: doc2.id,
+          personality: doc2.data().personality,
+        });
+        ids.push(doc2.id);
+      }
     });
-    ids.push(doc2.id);
   });
 
   const pairs = [];
@@ -212,41 +233,35 @@ async function balanceGroupsAndSaveToFirestore(groupNumber, navigation) {
 
   console.log(ids);
   console.log(pairs);
-
-  const groupsFound = balanceGroups(ids, pairs, groupNumber);
   if (groupNumber === "") {
     // eslint-disable-next-line no-param-reassign
     groupNumber = 2;
   }
+  const groupsFound = balanceGroups(ids, pairs, groupNumber);
 
   console.log(groupsFound);
+  const groupRef = collection(db, "group");
+  const memberRef = collection(db, "member");
+  groupsFound.forEach(async (groupMembers, index) => {
+    const docRef = await addDoc(groupRef, {
+      name: `Team ${index + 1}`,
+      fromclass: classID,
+    });
+    console.log(`Added document with ID: ${docRef.id}`);
 
-  // const querySnapshot2 = await getDocs(collection(db, "users"));
-
-  const groupId = 1000;
-  for (let i = 0; i < groupsFound.length; i += 1) {
-    const subList = groupsFound[i];
-    for (let j = 0; j < subList.length; j += 1) {
-      const groupIndex = i;
-      // Update a field in a document using a query
-      // const documentsRef = collection(db, 'users');
-      // const q = query(documentsRef);
-      // console.log(documentsRef)
-      // update(q, { groups: groupId+groupIndex })
-      //  .then(() => {
-      //    console.log('Field updated successfully!');
-      //  })
-      //  .catch((error) => {
-      //    console.error('Error updating field:', error);
-      //  });
-
-      // console.log(doc.id, groupId+groupIndex)
-    }
-  }
-
-  // updateGroups(querySnapshot2, groupsFound)
+    groupMembers.forEach(async (member) => {
+      console.log(member);
+      const allMembersSnapshot = await getDocs(memberRef);
+      allMembersSnapshot.forEach(async (doc2) => {
+        console.log(doc2);
+        if (doc2.data().userid === member && doc2.data().classid === classID) {
+          await updateDoc(doc2.ref, {
+            groupid: docRef.id,
+          });
+        }
+      });
+    });
+  });
 }
 
-export default CreateClassSummaryView;
-
-  
+export default CreateClassView;

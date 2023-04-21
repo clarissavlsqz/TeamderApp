@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { onSnapshot, collection } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+} from "firebase/firestore";
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,40 +19,61 @@ import { auth, db } from "../../../firebaseConfig";
 const TeamItem = ({ item }) => (
   <View style={styles.item}>
     <Text style={styles.team}>{item.team}</Text>
-    <Text style={styles.class}>{item.name}</Text>
+    <Text style={styles.class}>{item.class}</Text>
   </View>
 );
 
 const HomeView = () => {
-  const [userTeam, setUserTeam] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+  const [groupsOfUser, setGroupsOfUser] = useState([]);
 
   useEffect(() => {
-    const fetchUsersTeams = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user !== null) {
-          const usersGroupsRef = collection(db, "users", user.uid, "groups");
-          const unsubscribe = onSnapshot(usersGroupsRef, (querySnapshot) => {
-            const groups = [];
-            querySnapshot.forEach((doc) => {
-              const group = {};
-              group.name = doc.data().name;
-              group.team = doc.data().team;
-              groups.push(group);
-            });
-            setUserTeam(...userTeam, groups);
-          });
-        }
-      } catch (e) {
-        console.error(e);
+    const user = auth.currentUser;
+    const memberRef = collection(db, "member");
+
+    const unsubscribe = onSnapshot(
+      memberRef,
+      async (querySnapshot) => {
+        const groups = [];
+        querySnapshot.forEach((memberDoc) => {
+          if (memberDoc.data().userid === user.uid) {
+            if (memberDoc.data().groupid !== "") {
+              groups.push(memberDoc.data().groupid);
+            }
+          }
+        });
+        setUserGroups(groups);
+        const querySnapshotGroups = await getDocs(collection(db, "group"));
+        const groupsUserIsIn = [];
+        await Promise.all(
+          groups.map(async (groupUser) => {
+            await Promise.all(
+              querySnapshotGroups.docs.map(async (doc2) => {
+                if (doc2.id === groupUser) {
+                  const groupItem = {};
+                  groupItem.team = doc2.data().name;
+                  const classIDOfGroup = doc2.data().fromclass;
+                  const docRef = await getDoc(doc(db, "class", classIDOfGroup));
+                  groupItem.class = docRef.data().name;
+                  groupsUserIsIn.push(groupItem);
+                }
+              })
+            );
+          })
+        );
+        setGroupsOfUser(groupsUserIsIn);
+        console.log("Groups:", groupsUserIsIn);
+      },
+
+      (error) => {
+        console.error(error);
       }
-    };
-    fetchUsersTeams();
-  }, []);
+    );
 
-  useEffect(() => {
-    console.log(userTeam);
-  }, [userTeam]);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const renderItem = ({ item }) => {
     console.log("SOS");
@@ -57,7 +84,7 @@ const HomeView = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <FlatList
-        data={userTeam}
+        data={groupsOfUser}
         renderItem={renderItem}
         keyExtractor={(item) => item.team}
       />

@@ -27,13 +27,13 @@ const storeClassInfo = async (className, classDesc, capacity, navigation) => {
       admin: auth.currentUser.uid,
     });
     console.log("Document written with ID: ", classID);
-    navigation.navigate("CreateClassSummary");
+    navigation.navigate("CreateClassSummary", { classID });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 
-const CreateClassView = ({navigation}) => {
+const CreateClassView = ({ navigation }) => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -70,7 +70,9 @@ const CreateClassView = ({navigation}) => {
       />
 
       <TouchableOpacity
-        onPress={() => storeClassInfo(className, classDesc, capacity, navigation)}
+        onPress={() =>
+          storeClassInfo(className, classDesc, capacity, navigation)
+        }
         style={styles.button}
       >
         <Text style={styles.buttonText}> Create Class </Text>
@@ -140,3 +142,4 @@ const styles = StyleSheet.create({
 });
 
 export default CreateClassView;
+
