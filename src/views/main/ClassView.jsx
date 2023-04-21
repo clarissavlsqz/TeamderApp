@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useClassContext } from "../../context/class-context";
+import { useUserContext } from "../../context/user-context";
 
 const Item = ({ item, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
@@ -17,7 +18,22 @@ const Item = ({ item, onPress }) => (
 );
 
 const ClassView = ({ navigation }) => {
-  const { userClasses } = useClassContext();
+  const { userClasses, allClasses } = useClassContext();
+  const { user } = useUserContext();
+
+  const classes = useMemo(
+    () => [
+      ...allClasses
+        .filter(({ admin }) => admin === user.uid)
+        .map(({ name, id, ...rest }) => ({
+          name: `**${name}**`,
+          id: `admin-${id}`,
+          ...rest,
+        })),
+      ...userClasses,
+    ],
+    [userClasses, allClasses]
+  );
 
   const renderItem = ({ item }) => <Item item={item} />;
 
@@ -33,7 +49,7 @@ const ClassView = ({ navigation }) => {
       </TouchableOpacity>
 
       <FlatList
-        data={userClasses}
+        data={classes}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />

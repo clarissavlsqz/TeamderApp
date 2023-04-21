@@ -20,7 +20,7 @@ const AddClassView = ({ navigation }) => {
         return;
       }
 
-      navigation.replace("Class");
+      navigation.pop();
     });
   }, [joinClass, navigation]);
 
