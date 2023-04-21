@@ -29,12 +29,13 @@ const CreateClassView = ({ route }) => {
   const [capacity, setCapacity] = useState("");
   const [groupNumber, setGroupNumber] = useState("");
   const { classID } = route.params;
+
   // const [classIdMessage, setClassIdMessage] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let&apos;s create your class</Text>
-
+      <Text style={styles.header}>Your class was created successfully</Text>
+      
       <Text />
       <Text />
       <Text />
