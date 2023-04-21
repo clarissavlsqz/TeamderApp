@@ -47,9 +47,10 @@ const joinClass = async (classID, navigation) => {
       userid: auth.currentUser.uid,
     });
     // Returns to Tab after putting the code
+    // navigation.navigate("Tab"); --> antes salía error y ahora todo bien pero nos sentimos más seguros con el timeout xd
     setTimeout(() => {
       navigation.navigate("Tab");
-    }, 10000);
+    }, 100);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
