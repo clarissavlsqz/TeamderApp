@@ -17,7 +17,7 @@ import { db, auth } from "../../../firebaseConfig";
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 const classID = `${nanoid(4)}-${nanoid(4)}`;
 
-const storeClassInfo = async (className, classDesc, capacity) => {
+const storeClassInfo = async (className, classDesc, capacity, navigation) => {
   try {
     await setDoc(doc(db, "class", classID), {
       name: className,
@@ -27,13 +27,13 @@ const storeClassInfo = async (className, classDesc, capacity) => {
       admin: auth.currentUser.uid,
     });
     console.log("Document written with ID: ", classID);
-    navigation.navigate("CreateClassSummary")
+    navigation.navigate("CreateClassSummary");
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 
-const CreateClassView = () => {
+const CreateClassView = ({navigation}) => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -70,7 +70,7 @@ const CreateClassView = () => {
       />
 
       <TouchableOpacity
-        onPress={() => storeClassInfo(className, classDesc, capacity)}
+        onPress={() => storeClassInfo(className, classDesc, capacity, navigation)}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Create Class </Text>
