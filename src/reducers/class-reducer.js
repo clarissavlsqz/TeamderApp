@@ -204,9 +204,6 @@ export const selectClass = (userClass, dispatch) => {
         }
       });
 
-      console.log(userGroup);
-      console.log(groupIds);
-
       if (userIds.size === 0) {
         dispatch(loadClassmatesResponse([]));
         return Promise.resolve();
