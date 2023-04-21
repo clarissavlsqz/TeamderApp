@@ -17,10 +17,9 @@ const Item = ({ item, onPress }) => (
   </TouchableOpacity>
 );
 
-const renderItem = ({ item }) => <Item item={item} />;
-
 const ClassView = ({ navigation }) => {
-  const { userClasses, allClasses } = useClassContext();
+  const { userClasses, allClasses, selectClass, selectedClass } =
+    useClassContext();
   const { user } = useUserContext();
 
   const classes = useMemo(
@@ -36,6 +35,23 @@ const ClassView = ({ navigation }) => {
     ],
     [userClasses, allClasses]
   );
+
+  console.log(selectedClass.classmates);
+
+  const renderItem = useMemo(() => {
+    const renderClass = ({ item }) => (
+      <Item
+        item={item}
+        onPress={() => {
+          selectClass(item);
+
+          // navigation.push("ClassInfo");
+        }}
+      />
+    );
+
+    return renderClass;
+  }, []);
 
   return (
     <SafeAreaView>

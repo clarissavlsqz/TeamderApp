@@ -1,7 +1,9 @@
 import {
+  FieldPath,
   addDoc,
   collection,
   doc,
+  documentId,
   getDoc,
   getDocs,
   onSnapshot,
@@ -190,26 +192,73 @@ export const selectClass = (userClass, dispatch) => {
   getDocs(memberQuery)
     .then((memberQuerySnapshot) => {
       const userIds = new Set();
+      const groupIds = new Set();
+      const userGroup = {};
       memberQuerySnapshot.forEach((userDoc) => {
         userIds.add(userDoc.get("userid"));
+        userGroup[userDoc.get("userid")] = userDoc.get("groupid");
+
+        const groupId = userDoc.get("groupid");
+        if (groupId && !groupIds.has(groupId)) {
+          groupIds.add(groupId);
+        }
       });
+
+      console.log(userGroup);
+      console.log(groupIds);
 
       if (userIds.size === 0) {
         dispatch(loadClassmatesResponse([]));
         return Promise.resolve();
       }
 
-      const usersRef = collection(db, "user");
-      const classmateQuery = query(usersRef, where("id", "in", userIds));
+      const usersRef = collection(db, "users");
+
+      const classmateQuery = query(
+        usersRef,
+        where(documentId(), "in", [...userIds])
+      );
 
       return getDocs(classmateQuery).then((classmateQuerySnapshot) => {
-        dispatch(
-          loadClassmatesResponse(
-            classmateQuerySnapshot.docs.map((classmateDoc) =>
-              classmateDoc.data()
+        if (groupIds.size === 0) {
+          dispatch(
+            loadClassmatesResponse(
+              classmateQuerySnapshot.docs.map((classmateDoc) =>
+                classmateDoc.data()
+              )
             )
-          )
+          );
+
+          return Promise.resolve();
+        }
+
+        const groupRef = collection(db, "group");
+
+        const groupQuery = query(
+          groupRef,
+          where(documentId(), "in", [...groupIds])
         );
+
+        return getDocs(groupQuery).then((groupQuerySnapshot) => {
+          const groupMap = {};
+          groupQuerySnapshot.forEach((groupDoc) => {
+            groupMap[groupDoc.id] = groupDoc.data();
+          });
+
+          dispatch(
+            loadClassmatesResponse(
+              classmateQuerySnapshot.docs.map((classmateDoc) => {
+                const data = classmateDoc.data();
+
+                return {
+                  group: groupMap[userGroup[classmateDoc.id]],
+                  groupId: userGroup[classmateDoc.id],
+                  ...data,
+                };
+              })
+            )
+          );
+        });
       });
     })
     .catch((error) => {
