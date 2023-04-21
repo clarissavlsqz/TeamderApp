@@ -30,6 +30,7 @@ const InputBox = ({
             rules={rules}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
+                autoCapitalize="none"
                 placeholderTextColor={constants.BACKGROUND_COLOR}
                 style={styles.input}
                 secureTextEntry={passwordEnabled && password}

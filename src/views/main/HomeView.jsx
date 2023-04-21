@@ -13,8 +13,11 @@ import {
   View,
   FlatList,
   Text,
+  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { auth, db } from "../../../firebaseConfig";
+import TeammatesView from "../../components/TeammatesModal";
 
 const TeamItem = ({ item }) => (
   <View style={styles.item}>
@@ -26,6 +29,8 @@ const TeamItem = ({ item }) => (
 const HomeView = () => {
   const [userGroups, setUserGroups] = useState([]);
   const [groupsOfUser, setGroupsOfUser] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [groupID, setGroupID] = useState("");
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -52,6 +57,7 @@ const HomeView = () => {
                 if (doc2.id === groupUser) {
                   const groupItem = {};
                   groupItem.team = doc2.data().name;
+                  groupItem.groupID = doc2.id;
                   const classIDOfGroup = doc2.data().fromclass;
                   const docRef = await getDoc(doc(db, "class", classIDOfGroup));
                   groupItem.class = docRef.data().name;
@@ -73,21 +79,34 @@ const HomeView = () => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [isModalVisible]);
 
-  const renderItem = ({ item }) => {
-    console.log("SOS");
-    return <TeamItem item={item} />;
-  };
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        setIsModalVisible(!isModalVisible);
+        setGroupID(item.groupID);
+        console.log("TEAMVIEWGROUPID:", groupID);
+      }}
+    >
+      <TeamItem item={item} />
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={groupsOfUser}
         renderItem={renderItem}
-        keyExtractor={(item) => item.team}
+        keyExtractor={(item) => item.groupID}
       />
+      {isModalVisible && (
+        <View>
+          <TeammatesView isVisible={isModalVisible} groupID={groupID} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
