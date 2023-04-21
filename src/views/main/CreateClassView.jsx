@@ -27,6 +27,7 @@ const storeClassInfo = async (className, classDesc, capacity) => {
     });
     console.log("Document written with ID: ", classID);
     await addClassToUser(className);
+    navigation.navigate("CreateClassSummary")
   } catch (e) {
     console.error("Error adding document: ", e);
   }
