@@ -1,25 +1,19 @@
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  View,
-} from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Ionicons } from "@expo/vector-icons";
+import { useForm } from "react-hook-form";
 import { auth } from "../../../firebaseConfig";
-import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
+import InputBox from "../../components/InputBox";
 
 const LoginView = () => {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const { password, icon, onClickIcon } = useTogglePasswordVisibility();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const onLogin = (e) => {
-    e.preventDefault();
-    signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+  const onLogin = ({ email, password }) => {
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const { user } = userCredential;
@@ -35,36 +29,38 @@ const LoginView = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.emailInput}
-          placeholder="Email"
-          onChangeText={setLoginEmail}
-          value={loginEmail}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-      </View>
+      <InputBox
+        control={control}
+        errors={errors}
+        rules={{
+          required: {
+            message: "This field is required.",
+            value: true,
+          },
+          pattern: {
+            message: "Invalid email",
+            value: /^\S+@\S+$/i,
+          },
+        }}
+        label="Email"
+        name="email"
+      />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Password"
-          onChangeText={setLoginPassword}
-          value={loginPassword}
-          secureTextEntry={password}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <Ionicons
-          name={icon}
-          color="black"
-          onPress={onClickIcon}
-          size={24}
-          style={styles.icon}
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={onLogin}>
+      <InputBox
+        control={control}
+        errors={errors}
+        rules={{
+          required: {
+            message: "This field is required.",
+            value: true,
+          },
+        }}
+        label="Password"
+        name="password"
+        password
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(onLogin)}>
         <Text style={styles.buttonText}> Login </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -77,43 +73,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  header: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 25,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  passwordInput: {
-    width: "70%",
-    fontSize: 18,
-    marginTop: 40,
-  },
-  emailInput: {
-    width: "75%",
-    fontSize: 18,
-    marginTop: 40,
-  },
-  passwordInputError: {
-    borderBottomColor: "red",
-    borderBottomWidth: 1,
-    width: "70%",
-    fontSize: 18,
-    marginTop: 40,
-  },
   button: {
+    backgroundColor: "#98D7D0",
+    alignItems: "center",
+    borderRadius: 25,
+    width: "80%",
     marginTop: 40,
   },
   buttonText: {
     fontSize: 18,
     fontFamily: "Poppins-Bold",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-  },
-  icon: {
-    paddingTop: 20,
   },
 });
 
