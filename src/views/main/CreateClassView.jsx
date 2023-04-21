@@ -27,7 +27,7 @@ const storeClassInfo = async (className, classDesc, capacity, navigation) => {
       admin: auth.currentUser.uid,
     });
     console.log("Document written with ID: ", classID);
-    navigation.navigate("CreateClassSummary");
+    navigation.navigate("CreateClassSummary", { classID });
   } catch (e) {
     console.error("Error adding document: ", e);
   }
