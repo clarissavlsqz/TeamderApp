@@ -140,6 +140,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
+    backgroundColor: "#98D7D0",
+    alignItems: "center",
+    borderRadius: 25,
+    width: "80%",
     marginTop: 40,
   },
   buttonText: {

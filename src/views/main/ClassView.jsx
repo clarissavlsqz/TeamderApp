@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, getDocs } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
 import {
   FlatList,
@@ -22,37 +22,53 @@ const Item = ({ item, onPress }) => (
 );
 
 const ClassView = ({ navigation }) => {
-  const [userClass, setUserClass] = useState([]);
+  const [classesOfUser, setClassesOfUser] = useState([]);
   const [isWaiting, setIsWaiting] = useState(true);
+  const [userClasses, setUserClasses] = useState([]);
 
   useEffect(() => {
-    const fetchUsersGroups = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user !== null) {
-          const usersClassesRef = collection(db, "users", user.uid, "classes");
-          const unsubscribe = onSnapshot(usersClassesRef, (querySnapshot) => {
-            const classes = [];
-            querySnapshot.forEach((doc) => {
+    const user = auth.currentUser;
+    const memberRef = collection(db, "member");
+
+    const unsubscribe = onSnapshot(
+      memberRef,
+      async (querySnapshot) => {
+        const classes = [];
+        querySnapshot.forEach((doc) => {
+          if (doc.data().userid === user.uid) {
+            classes.push(doc.data().classid);
+          }
+        });
+        setUserClasses(classes);
+        const querySnapshotClasses = await getDocs(collection(db, "class"));
+        const classesUserIsIn = [];
+        classes.forEach((classUser) => {
+          querySnapshotClasses.forEach((doc2) => {
+            if (doc2.id === classUser) {
               const classItem = {};
-              classItem.name = doc.data().name;
-              classItem.uid = doc.data().uid;
-              classes.push(classItem);
-            });
-            setUserClass(...userClass, classes);
+              classItem.name = doc2.data().name;
+              classItem.uid = doc2.data().id;
+              classesUserIsIn.push(classItem);
+            }
           });
-        }
-      } catch (e) {
-        console.error(e);
+        });
+        setClassesOfUser(classesUserIsIn);
+      },
+
+      (error) => {
+        console.error(error);
       }
+    );
+
+    return () => {
+      unsubscribe();
     };
-    fetchUsersGroups();
   }, []);
 
-  useEffect(() => {
-    console.log(userClass);
-    setIsWaiting(false);
-  }, [userClass]);
+  // useEffect(() => {
+  //   console.log(userClass);
+  //   setIsWaiting(false);
+  // }, [userClass]);
 
   const renderItem = ({ item }) => <Item item={item} />;
 
@@ -68,7 +84,7 @@ const ClassView = ({ navigation }) => {
       </TouchableOpacity>
 
       <FlatList
-        data={userClass}
+        data={classesOfUser}
         renderItem={renderItem}
         keyExtractor={(item) => item.uid}
       />

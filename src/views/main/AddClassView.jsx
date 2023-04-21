@@ -5,58 +5,51 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
 import {
   collection,
   setDoc,
   doc,
   getDoc,
-  arrayUnion,
+  getDocs,
   runTransaction,
+  addDoc,
 } from "firebase/firestore";
 import { db, auth } from "../../../firebaseConfig";
 
-const storeUserIDToClass = async (classID, navigation) => {
+const joinClass = async (classID, navigation) => {
   try {
     console.log(classID);
     const classRef = doc(db, "class", classID);
-    await runTransaction(db, async (transaction) => {
-      const classDoc = await transaction.get(classRef);
-      if (!classDoc.exists()) {
-        throw new Error("Document does not exist!");
-      }
-
-      transaction.update(classRef, {
-        students: arrayUnion(auth.currentUser.uid),
-      });
-    });
-    console.log("Transaction successfully committed!");
-    await addClassToUser(classID);
-    // Returns to Tab after putting the code
-    navigation.navigate("Tab");
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
-
-const addClassToUser = async (classID) => {
-  try {
-    let className;
-    const classRef = doc(db, "class", classID);
-    const classDocSnap = await getDoc(classRef);
-    if (classDocSnap.exists()) {
-      console.log("Document data:", classDocSnap.data());
-      className = classDocSnap.data().name;
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+    const classDoc = await getDoc(classRef);
+    if (!classDoc.exists()) {
+      throw new Error("Document does not exist!");
     }
-    const userID = auth.currentUser.uid;
-    const usersGroupsRef = collection(db, "users", userID, "classes");
-    await setDoc(doc(usersGroupsRef, classID), {
-      name: className,
+    const memberDocs = await getDocs(collection(db, "member"));
+    let classExist = false;
+    memberDocs.forEach((memberDoc) => {
+      if (memberDoc.data().userid === auth.currentUser.uid) {
+        if (memberDoc.data().classid === classID) {
+          Alert.alert("You are already part of the class", "My Alert Msg", [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+          classExist = true;
+        }
+      }
     });
-    console.log("Document written with ID: ", classID);
+    if (classExist) {
+      return;
+    }
+    await addDoc(collection(db, "member"), {
+      classid: classID,
+      groupid: "",
+      userid: auth.currentUser.uid,
+    });
+    // Returns to Tab after putting the code
+    setTimeout(() => {
+      navigation.navigate("Tab");
+    }, 10000);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -76,7 +69,7 @@ const AddClassView = ({ navigation }) => {
       <TouchableOpacity
         onPress={() =>
           // Check if the group exists and pop a message if not
-          storeUserIDToClass(classInputID, navigation)
+          joinClass(classInputID, navigation)
         }
         style={styles.button}
       >

@@ -24,24 +24,10 @@ const storeClassInfo = async (className, classDesc, capacity) => {
       description: classDesc,
       capacity,
       id: classID,
+      admin: auth.currentUser.uid,
     });
     console.log("Document written with ID: ", classID);
-    await addClassToUser(className);
     navigation.navigate("CreateClassSummary")
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
-
-const addClassToUser = async (className) => {
-  try {
-    const userID = auth.currentUser.uid;
-    const usersGroupsRef = collection(db, "users", userID, "classes");
-    await setDoc(doc(usersGroupsRef, classID), {
-      name: className,
-      type: "owner",
-    });
-    console.log("Document written with ID: ", classID);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
