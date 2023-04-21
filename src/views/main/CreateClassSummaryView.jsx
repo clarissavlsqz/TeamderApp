@@ -25,7 +25,7 @@ const CreateClassView = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let&apos;s create your class</Text>
+      <Text style={styles.header}>Your class was created successfully</Text>
       
       <Text />
       <Text />
