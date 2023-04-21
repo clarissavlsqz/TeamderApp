@@ -34,6 +34,7 @@ export const fetchUser = (dispatch) => {
           lastName: userDoc.get("lastName"),
           personality: userDoc.get("personality"),
           email: user.email,
+          uid: user.uid,
         })
       );
     })
@@ -77,6 +78,6 @@ export const createUserProfile = (
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
+      console.error(errorCode, errorMessage);
     });
 };

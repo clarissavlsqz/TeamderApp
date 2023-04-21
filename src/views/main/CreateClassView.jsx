@@ -1,80 +1,77 @@
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { getDocs, collection, setDoc, doc, addDoc } from "firebase/firestore";
+import React from "react";
+import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useForm } from "react-hook-form";
 import { customAlphabet } from "nanoid/non-secure";
-import {
-  personalityTable,
-  personalityWeightTable,
-} from "../../../personalityTables";
-import { db, auth } from "../../../firebaseConfig";
+import InputBox from "../../components/InputBox";
+import { useClassContext } from "../../context/class-context";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
-const classID = `${nanoid(4)}-${nanoid(4)}`;
-
-const storeClassInfo = async (className, classDesc, capacity, navigation) => {
-  try {
-    await setDoc(doc(db, "class", classID), {
-      name: className,
-      description: classDesc,
-      capacity,
-      id: classID,
-      admin: auth.currentUser.uid,
-    });
-    console.log("Document written with ID: ", classID);
-    navigation.navigate("CreateClassSummary", { classID });
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
 
 const CreateClassView = ({ navigation }) => {
-  const [className, setClassName] = useState("");
-  const [classDesc, setClassDesc] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [groupNumber, setGroupNumber] = useState("");
   // const [classIdMessage, setClassIdMessage] = useState(false);
+  const { createClass } = useClassContext();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({});
+
+  const onSubmit = (data) => {
+    createClass(
+      {
+        ...data,
+        classId: `${nanoid(4)}-${nanoid(4)}`,
+      },
+      () => {
+        navigation.replace("CreateClassSummary");
+      }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Let&apos;s create your class</Text>
-      <TextInput
-        onChangeText={setClassName}
-        value={className}
-        placeholder="Class Name"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setClassDesc}
-        value={classDesc}
-        placeholder="Class Description"
-        style={styles.textInput}
-      />
-      <TextInput
-        onChangeText={setCapacity}
-        value={capacity}
-        placeholder="Class Capacity"
-        style={styles.textInput}
+      <InputBox
+        control={control}
+        errors={errors}
+        rules={{
+          required: {
+            message: "This field is required.",
+            value: true,
+          },
+        }}
+        label="Class Name"
+        name="className"
       />
 
-      <TextInput
-        onChangeText={setGroupNumber}
-        value={groupNumber}
-        placeholder="Number of groups"
-        style={styles.textInput}
+      <InputBox
+        control={control}
+        errors={errors}
+        rules={{
+          required: {
+            message: "This field is required.",
+            value: true,
+          },
+        }}
+        label="Class Description"
+        name="classDesc"
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          storeClassInfo(className, classDesc, capacity, navigation)
-        }
-        style={styles.button}
-      >
+      <InputBox
+        control={control}
+        errors={errors}
+        rules={{
+          required: {
+            message: "This field is required.",
+            value: true,
+          },
+        }}
+        label="Capacity"
+        name="capacity"
+      />
+
+      <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
         <Text style={styles.buttonText}> Create Class </Text>
       </TouchableOpacity>
 
@@ -99,39 +96,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
-  textInput: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    width: "70%",
-    fontSize: 18,
-    marginTop: 40,
-  },
-  textInputError: {
-    borderBottomColor: "red",
-    borderBottomWidth: 1,
-    width: "70%",
-    fontSize: 18,
-    marginTop: 40,
-  },
-  box: {
-    width: "65%",
-    marginTop: 40,
-  },
-  dropdown: {
-    position: "absolute",
-    width: "69.6%",
-    marginTop: 40,
-  },
-  input: {
-    width: "100%",
-  },
-  redirectText: {
-    width: "60%",
-    marginTop: 10,
-  },
-  passwordError: {
-    marginTop: 10,
-  },
   button: {
     marginTop: 40,
   },
@@ -142,4 +106,3 @@ const styles = StyleSheet.create({
 });
 
 export default CreateClassView;
-

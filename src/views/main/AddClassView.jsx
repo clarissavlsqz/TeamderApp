@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   SafeAreaView,
   TextInput,
@@ -7,57 +7,22 @@ import {
   Text,
   Alert,
 } from "react-native";
-import {
-  collection,
-  setDoc,
-  doc,
-  getDoc,
-  getDocs,
-  runTransaction,
-  addDoc,
-} from "firebase/firestore";
-import { db, auth } from "../../../firebaseConfig";
-
-const joinClass = async (classID, navigation) => {
-  try {
-    console.log(classID);
-    const classRef = doc(db, "class", classID);
-    const classDoc = await getDoc(classRef);
-    if (!classDoc.exists()) {
-      throw new Error("Document does not exist!");
-    }
-    const memberDocs = await getDocs(collection(db, "member"));
-    let classExist = false;
-    memberDocs.forEach((memberDoc) => {
-      if (memberDoc.data().userid === auth.currentUser.uid) {
-        if (memberDoc.data().classid === classID) {
-          Alert.alert("You are already part of the class", "My Alert Msg", [
-            { text: "OK", onPress: () => console.log("OK Pressed") },
-          ]);
-          classExist = true;
-        }
-      }
-    });
-    if (classExist) {
-      return;
-    }
-    await addDoc(collection(db, "member"), {
-      classid: classID,
-      groupid: "",
-      userid: auth.currentUser.uid,
-    });
-    // Returns to Tab after putting the code
-    // navigation.navigate("Tab"); --> antes salía error y ahora todo bien pero nos sentimos más seguros con el timeout xd
-    setTimeout(() => {
-      navigation.navigate("Tab");
-    }, 100);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
+import { useClassContext } from "../../context/class-context";
 
 const AddClassView = ({ navigation }) => {
   const [classInputID, setClassInputID] = useState("");
+  const { joinClass } = useClassContext();
+
+  const join = useCallback(() => {
+    joinClass(classInputID, (success, message) => {
+      if (!success) {
+        Alert.alert("Error", message, [{ text: "OK" }]);
+        return;
+      }
+
+      navigation.replace("Class");
+    });
+  }, [joinClass, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,10 +33,7 @@ const AddClassView = ({ navigation }) => {
         style={styles.textInput}
       />
       <TouchableOpacity
-        onPress={() =>
-          // Check if the group exists and pop a message if not
-          joinClass(classInputID, navigation)
-        }
+        onPress={() => join(classInputID)}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Enter </Text>

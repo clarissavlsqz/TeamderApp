@@ -1,5 +1,4 @@
-import { collection, onSnapshot, getDocs } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,67 +7,17 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { db, auth } from "../../../firebaseConfig";
-
-const dummyClasses = Array.from(Array(5).keys()).map((i) => ({
-  title: `Class ${i + 1}`,
-  id: i,
-}));
+import { useClassContext } from "../../context/class-context";
 
 const Item = ({ item, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
     <Text style={styles.class}>{item.name}</Text>
+    <Text style={styles.classId}>{item.id}</Text>
   </TouchableOpacity>
 );
 
 const ClassView = ({ navigation }) => {
-  const [classesOfUser, setClassesOfUser] = useState([]);
-  const [isWaiting, setIsWaiting] = useState(true);
-  const [userClasses, setUserClasses] = useState([]);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    const memberRef = collection(db, "member");
-
-    const unsubscribe = onSnapshot(
-      memberRef,
-      async (querySnapshot) => {
-        const classes = [];
-        querySnapshot.forEach((doc) => {
-          if (doc.data().userid === user.uid) {
-            classes.push(doc.data().classid);
-          }
-        });
-        setUserClasses(classes);
-        const querySnapshotClasses = await getDocs(collection(db, "class"));
-        const classesUserIsIn = [];
-        classes.forEach((classUser) => {
-          querySnapshotClasses.forEach((doc2) => {
-            if (doc2.id === classUser) {
-              const classItem = {};
-              classItem.name = doc2.data().name;
-              classItem.uid = doc2.data().id;
-              classesUserIsIn.push(classItem);
-            }
-          });
-        });
-        setClassesOfUser(classesUserIsIn);
-      },
-
-      (error) => {
-        console.error(error);
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(userClass);
-  //   setIsWaiting(false);
-  // }, [userClass]);
+  const { userClasses } = useClassContext();
 
   const renderItem = ({ item }) => <Item item={item} />;
 
@@ -84,9 +33,9 @@ const ClassView = ({ navigation }) => {
       </TouchableOpacity>
 
       <FlatList
-        data={classesOfUser}
+        data={userClasses}
         renderItem={renderItem}
-        keyExtractor={(item) => item.uid}
+        keyExtractor={(item) => item.id}
       />
     </SafeAreaView>
   );
@@ -108,6 +57,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     fontWeight: "bold",
+  },
+  classId: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   buttonText: {
     fontSize: 18,

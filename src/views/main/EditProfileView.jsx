@@ -18,7 +18,12 @@ const EditProfile = ({ navigation }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: user,
+    defaultValues: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      personality: user.personality,
+    },
   });
 
   if (user === null) {

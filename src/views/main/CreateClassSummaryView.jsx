@@ -1,51 +1,31 @@
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import {
-  getDocs,
-  collection,
-  setDoc,
-  doc,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { customAlphabet } from "nanoid/non-secure";
+import React from "react";
+import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { getDocs, collection, addDoc, updateDoc } from "firebase/firestore";
 import {
   personalityTable,
   personalityWeightTable,
 } from "../../../personalityTables";
-import { db, auth } from "../../../firebaseConfig";
+import { db } from "../../../firebaseConfig";
+import { useClassContext } from "../../context/class-context";
 
-const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
+const CreateClassSummaryView = () => {
+  const { selectedClass } = useClassContext();
 
-const CreateClassView = ({ route }) => {
-  const [className, setClassName] = useState("");
-  const [classDesc, setClassDesc] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [groupNumber, setGroupNumber] = useState("");
-  const { classID } = route.params;
-
-  // const [classIdMessage, setClassIdMessage] = useState(false);
+  if (!selectedClass.class) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Your class was created successfully</Text>
-      
+
       <Text />
       <Text />
       <Text />
       <Text>This is your unique class id: </Text>
-      <Text>{`${classID}`} </Text>
+      <Text>{selectedClass.class.id} </Text>
 
-      <TouchableOpacity
-        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber, classID)}
-        style={styles.button}
-      >
+      <TouchableOpacity onPress={() => {}} style={styles.button}>
         <Text style={styles.buttonText}> Assign groups </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -264,4 +244,4 @@ async function balanceGroupsAndSaveToFirestore(groupNumber, classID) {
   });
 }
 
-export default CreateClassView;
+export default CreateClassSummaryView;
