@@ -16,7 +16,7 @@ import { db, auth } from "../../../firebaseConfig";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
-const CreateClassView = () => {
+const CreateClassSummaryView = ({navigation}) => {
   const [className, setClassName] = useState("");
   const [classDesc, setClassDesc] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -34,7 +34,7 @@ const CreateClassView = () => {
       <Text>{`${nanoid(4)}-${nanoid(4)}`}</Text>
 
       <TouchableOpacity
-        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber)}
+        onPress={() => balanceGroupsAndSaveToFirestore(groupNumber, navigation)}
         style={styles.button}
       >
         <Text style={styles.buttonText}> Assign groups </Text>
@@ -168,7 +168,8 @@ function balanceGroups(nodes, links, numGroups) {
   return groups.map((group) => Array.from(group));
 }
 
-async function balanceGroupsAndSaveToFirestore(groupNumber) {
+async function balanceGroupsAndSaveToFirestore(groupNumber, navigation) {
+  navigation.navigate("Tab");
   console.log("hola");
   // assuming you have already initialized the Firebase SDK and authenticated the user
 
@@ -246,6 +247,6 @@ async function balanceGroupsAndSaveToFirestore(groupNumber) {
   // updateGroups(querySnapshot2, groupsFound)
 }
 
-export default CreateClassView;
+export default CreateClassSummaryView;
 
   
