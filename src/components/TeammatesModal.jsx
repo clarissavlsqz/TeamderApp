@@ -1,24 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, getDoc, doc } from "firebase/firestore";
-import {
-  SafeAreaView,
-  StyleSheet,
-  StatusBar,
-  View,
-  Text,
-  Modal,
-  Alert,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
-import { auth, db } from "../../firebaseConfig";
+import { StyleSheet, View, Text, Modal, TouchableOpacity } from "react-native";
+import { db } from "../../firebaseConfig";
 import constants from "../constants";
 
-const TeammatesModal = ({ isVisible, groupID }) => {
-  const [modalVisible, setModalVisible] = useState(isVisible);
-  const [teammatesList, setTeammatesList] = useState([]);
+const TeammatesModal = ({ isVisible, groupID, closeModal }) => {
+  const [teammatesList, setTeammatesList] = useState(null);
 
-  console.log("GROUPID:", groupID);
   useEffect(() => {
     async function getTeammates(groupID2) {
       // get a reference to the "users" collection
@@ -41,32 +29,33 @@ const TeammatesModal = ({ isVisible, groupID }) => {
       );
 
       setTeammatesList(names);
-      console.log("NAMES", teammatesList);
     }
     getTeammates(groupID);
   }, [groupID]);
+
+  if (!teammatesList) {
+    return null;
+  }
 
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="fade"
         transparent
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
+        visible={isVisible}
+        onRequestClose={closeModal}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}> Team Members </Text>
             {teammatesList.map((person) => (
-              <View>
+              <View key={person}>
                 <Text style={styles.modalStudent}>{person}</Text>
               </View>
             ))}
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(false)}
+              onPress={closeModal}
             >
               <Text style={styles.textStyle}>OK</Text>
             </TouchableOpacity>

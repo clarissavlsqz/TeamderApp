@@ -17,6 +17,8 @@ const Item = ({ item, onPress }) => (
   </TouchableOpacity>
 );
 
+const renderItem = ({ item }) => <Item item={item} />;
+
 const ClassView = ({ navigation }) => {
   const { userClasses, allClasses } = useClassContext();
   const { user } = useUserContext();
@@ -34,8 +36,6 @@ const ClassView = ({ navigation }) => {
     ],
     [userClasses, allClasses]
   );
-
-  const renderItem = ({ item }) => <Item item={item} />;
 
   return (
     <SafeAreaView>

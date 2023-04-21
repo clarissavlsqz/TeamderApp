@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   onSnapshot,
   collection,
@@ -79,19 +79,26 @@ const HomeView = () => {
     return () => {
       unsubscribe();
     };
-  }, [isModalVisible]);
+  }, []);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        setIsModalVisible(!isModalVisible);
-        setGroupID(item.groupID);
-        console.log("TEAMVIEWGROUPID:", groupID);
-      }}
-    >
-      <TeamItem item={item} />
-    </TouchableOpacity>
-  );
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const renderItem = useMemo(() => {
+    const render = ({ item }) => (
+      <TouchableOpacity
+        onPress={() => {
+          setIsModalVisible(true);
+          setGroupID(item.groupID);
+        }}
+      >
+        <TeamItem item={item} />
+      </TouchableOpacity>
+    );
+
+    return render;
+  }, [setIsModalVisible, setGroupID]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,7 +111,11 @@ const HomeView = () => {
       />
       {isModalVisible && (
         <View>
-          <TeammatesView isVisible={isModalVisible} groupID={groupID} />
+          <TeammatesView
+            isVisible={isModalVisible}
+            closeModal={closeModal}
+            groupID={groupID}
+          />
         </View>
       )}
     </SafeAreaView>
