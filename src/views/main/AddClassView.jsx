@@ -5,19 +5,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
 import {
   collection,
   setDoc,
   doc,
   getDoc,
-  arrayUnion,
+  getDocs,
   runTransaction,
   addDoc,
 } from "firebase/firestore";
 import { db, auth } from "../../../firebaseConfig";
 
-const storeUserIDToClass = async (classID, navigation) => {
+const joinClass = async (classID, navigation) => {
   try {
     console.log(classID);
     const classRef = doc(db, "class", classID);
@@ -25,13 +26,30 @@ const storeUserIDToClass = async (classID, navigation) => {
     if (!classDoc.exists()) {
       throw new Error("Document does not exist!");
     }
+    const memberDocs = await getDocs(collection(db, "member"));
+    let classExist = false;
+    memberDocs.forEach((memberDoc) => {
+      if (memberDoc.data().userid === auth.currentUser.uid) {
+        if (memberDoc.data().classid === classID) {
+          Alert.alert("You are already part of the class", "My Alert Msg", [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+          classExist = true;
+        }
+      }
+    });
+    if (classExist) {
+      return;
+    }
     await addDoc(collection(db, "member"), {
       classid: classID,
       groupid: "",
       userid: auth.currentUser.uid,
     });
     // Returns to Tab after putting the code
-    navigation.navigate("Tab");
+    setTimeout(() => {
+      navigation.navigate("Tab");
+    }, 10000);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -51,7 +69,7 @@ const AddClassView = ({ navigation }) => {
       <TouchableOpacity
         onPress={() =>
           // Check if the group exists and pop a message if not
-          storeUserIDToClass(classInputID, navigation)
+          joinClass(classInputID, navigation)
         }
         style={styles.button}
       >
