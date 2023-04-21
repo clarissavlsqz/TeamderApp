@@ -15,6 +15,7 @@ import { auth } from "./firebaseConfig";
 import CreateClassView from "./src/views/main/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
 import EditProfile from "./src/views/main/EditProfileView";
+import CreateClassSummaryView from "./src/views/main/CreateClassSummaryView";
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,11 @@ const App = () => {
             <Stack.Screen
               name="CreateClass"
               component={CreateClassView}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="CreateClassSummary"
+              component={CreateClassSummaryView}
               options={{ headerShown: true }}
             />
           </Stack.Navigator>
