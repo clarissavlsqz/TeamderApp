@@ -6,14 +6,23 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useClassContext } from "../../context/class-context";
 import { useUserContext } from "../../context/user-context";
+import constants from "../../constants";
 
 const Item = ({ item, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>
     <Text style={styles.class}>{item.name}</Text>
-    <Text style={styles.classId}>{item.id}</Text>
+    <View style={styles.badgeView}>
+      <Text style={styles.classId}>{item.id}</Text>
+      {item.admin && (
+        <View style={styles.classOwnerView}>
+          <Text style={styles.classOwner}>owner</Text>
+        </View>
+      )}
+    </View>
   </TouchableOpacity>
 );
 
@@ -27,8 +36,9 @@ const ClassView = ({ navigation }) => {
       ...allClasses
         .filter(({ admin }) => admin === user.uid)
         .map(({ name, id, ...rest }) => ({
-          name: `**${name}**`,
+          name,
           id: `admin-${id}`,
+          admin: true,
           ...rest,
         })),
       ...userClasses,
@@ -68,6 +78,7 @@ const ClassView = ({ navigation }) => {
         data={classes}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        style={styles.flatListContainer}
       />
     </SafeAreaView>
   );
@@ -100,6 +111,26 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 40,
+  },
+  classOwner: {
+    fontWeight: "bold",
+    fontSize: 12,
+    color: "black",
+    padding: 2,
+  },
+  badgeView: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  classOwnerView: {
+    backgroundColor: constants.BACKGROUND_COLOR,
+    padding: 5,
+    marginRight: 10,
+    borderRadius: 50,
+  },
+  flatListContainer: {
+    marginBottom: 70,
   },
 });
 
