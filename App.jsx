@@ -1,5 +1,5 @@
-/* eslint-disable react/jsx-filename-extension */
-import "react-native-gesture-handler";
+import "react-native-gesture-handler"; // needs to be the first import
+import "./src/utils/color-scheme"; // needs to be the second import
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
