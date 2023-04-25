@@ -1,34 +1,46 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
+import { Button, Colors, Dash, Text, View } from "react-native-ui-lib";
 import { auth } from "../../../firebaseConfig";
 import InputBox from "../../components/InputBox";
+import LoadingButton from "../../components/LoadingButton";
+import LocalImages from "../../../assets/images/LocalImages";
 
 const LoginView = () => {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
+  const [loading, setLoading] = useState(false);
+
   const onLogin = ({ email, password }) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const { user } = userCredential;
-        console.log("SIGNED IN!!");
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+    setLoading(true);
+
+    signInWithEmailAndPassword(auth, email, password).catch((error) => {
+      const errorMessage = error.message;
+      setError("password", {
+        message: errorMessage,
       });
+      setLoading(false);
+    });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View useSafeArea flex centerV padding-40 bg-screenBG>
+      <View centerH paddingB-80>
+        <Image source={LocalImages.logo2} style={{ width: 261, height: 41 }} />
+      </View>
+
+      <Text text70 marginB-10>
+        Login to your account
+      </Text>
+
       <InputBox
         control={control}
         errors={errors}
@@ -60,30 +72,20 @@ const LoginView = () => {
         password
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit(onLogin)}>
-        <Text style={styles.buttonText}> Login </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <LoadingButton
+        onPress={handleSubmit(onLogin)}
+        label="Sign In"
+        loading={loading}
+        marginV-30
+      />
+
+      <View centerH>
+        <Text>Don&#39;t have an account?</Text>
+
+        <Button link label="Register" />
+      </View>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    backgroundColor: "#98D7D0",
-    alignItems: "center",
-    borderRadius: 25,
-    width: "80%",
-    marginTop: 40,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: "Poppins-Bold",
-  },
-});
 
 export default LoginView;

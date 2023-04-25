@@ -1,7 +1,7 @@
 import React from "react";
-import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Controller } from "react-hook-form";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors, Text, TextField, View } from "react-native-ui-lib";
 import constants from "../constants";
 import { useTogglePasswordVisibility } from "../hooks/useTogglePasswordVisibility";
 
@@ -11,6 +11,7 @@ const InputBox = ({
   rules,
   name,
   label,
+  placeholder,
   password = false,
 }) => {
   const {
@@ -20,45 +21,54 @@ const InputBox = ({
   } = useTogglePasswordVisibility();
 
   return (
-    <View style={styles.root}>
-      <View style={styles.container}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.label}>{label}</Text>
-
+    <View>
+      <View row paddingT-8 paddingB-3>
+        <View flex>
+          <Text marginB-5 text90 grey20>
+            {label}
+          </Text>
           <Controller
             control={control}
             rules={rules}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
+              <TextField
                 autoCapitalize="none"
-                placeholderTextColor={constants.BACKGROUND_COLOR}
-                style={styles.input}
                 secureTextEntry={passwordEnabled && password}
                 onBlur={onBlur}
                 onChangeText={onChange}
+                placeholder={placeholder}
                 value={value}
+                trailingAccessory={
+                  password && (
+                    <Ionicons
+                      name={icon}
+                      color="black"
+                      onPress={onClickIcon}
+                      size={24}
+                    />
+                  )
+                }
+                fieldStyle={{
+                  borderRadius: 5,
+                  borderWidth: 0.75,
+                  borderColor: errors[name] ? "red" : "black",
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                }}
               />
             )}
             name={name}
           />
         </View>
 
-        {password && (
-          <Ionicons
-            name={icon}
-            color="black"
-            onPress={onClickIcon}
-            size={24}
-            style={styles.icon}
-          />
-        )}
+        {}
       </View>
-      {errors[name] && <Text style={styles.error}>{errors[name].message}</Text>}
+      {errors[name] && <Text error>{errors[name].message}</Text>}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   root: {
     flexDirection: "column",
     alignItems: "baseline",
@@ -73,7 +83,6 @@ const styles = StyleSheet.create({
     paddingBottom: 2.5,
     borderRadius: 5,
     borderWidth: 0.75,
-    borderColor: constants.BACKGROUND_COLOR,
   },
   input: {
     fontFamily: constants.FONT_FAMILY,
@@ -82,7 +91,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: constants.FONT_FAMILY,
-    marginLeft: 5,
+    marginLeft: 0,
     color: constants.BACKGROUND_COLOR,
     fontSize: 12,
   },
@@ -92,6 +101,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
   },
-});
+};
 
 export default InputBox;
