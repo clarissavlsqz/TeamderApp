@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
-import { Button, Colors, Dash, Text, View } from "react-native-ui-lib";
+import { Button, Text, View } from "react-native-ui-lib";
 import { auth } from "../../../firebaseConfig";
 import InputBox from "../../components/InputBox";
 import LoadingButton from "../../components/LoadingButton";

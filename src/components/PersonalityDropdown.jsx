@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
 import { Controller } from "react-hook-form";
-import constants from "../constants";
+import { Picker } from "react-native-ui-lib/src/components/picker";
+import { Ionicons } from "@expo/vector-icons";
+import { Text, View } from "react-native-ui-lib";
 
 const data = [
   { label: "INTJ", value: "INTJ" },
@@ -24,11 +24,12 @@ const data = [
 ].sort(({ label: label1 }, { label: label2 }) => label1.localeCompare(label2));
 
 const PersonalityDropdown = ({ control, errors }) => (
-  <View style={styles.root}>
-    <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.label}>Personality</Text>
-
+  <View>
+    <View row paddingT-8 paddingB-3>
+      <View flex>
+        <Text marginB-5 text90 grey20>
+          Personality
+        </Text>
         <Controller
           control={control}
           rules={{
@@ -38,82 +39,32 @@ const PersonalityDropdown = ({ control, errors }) => (
             },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <Dropdown
-              style={[styles.dropdown]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={data}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder="Select personality"
+            <Picker
+              onChange={onChange}
               value={value}
               onBlur={onBlur}
-              onChange={(item) => onChange(item.value)}
-            />
+              trailingAccessory={
+                <Ionicons name="caret-down-outline" color="black" size={24} />
+              }
+              fieldStyle={{
+                borderRadius: 5,
+                borderWidth: 0.75,
+                borderColor: errors.personality ? "red" : "black",
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+              }}
+            >
+              {data.map(({ label }) => (
+                <Picker.Item key={label} value={label} label={label} />
+              ))}
+            </Picker>
           )}
           name="personality"
         />
       </View>
     </View>
-    {errors.personality && (
-      <Text style={styles.error}>{errors.personality.message}</Text>
-    )}
+    {errors.personality && <Text error>{errors.personality.message}</Text>}
   </View>
 );
 
 export default PersonalityDropdown;
-
-const styles = StyleSheet.create({
-  root: {
-    flexDirection: "column",
-    alignItems: "baseline",
-    marginBottom: 20,
-    marginHorizontal: 20,
-  },
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 7.5,
-    paddingHorizontal: 12.5,
-    paddingBottom: 2.5,
-    borderRadius: 5,
-    borderWidth: 0.75,
-    borderColor: constants.BACKGROUND_COLOR,
-  },
-  dropdown: {
-    height: 50,
-    paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    fontFamily: constants.FONT_FAMILY,
-    marginLeft: 5,
-    color: constants.BACKGROUND_COLOR,
-    fontSize: 12,
-  },
-  error: {
-    fontFamily: constants.FONT_FAMILY,
-    color: "#ff0000",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-});

@@ -1,10 +1,11 @@
-import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import { A } from "@expo/html-elements";
 import { useForm, useWatch } from "react-hook-form";
+import { Button, Text, View } from "react-native-ui-lib";
 import PersonalityDropdown from "../../components/PersonalityDropdown";
 import InputBox from "../../components/InputBox";
 import { useUserContext } from "../../context/user-context";
+import LoadingButton from "../../components/LoadingButton";
 
 const SignUpView = () => {
   const {
@@ -12,6 +13,8 @@ const SignUpView = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const [loading, setLoading] = useState(false);
 
   const { createUser } = useUserContext();
 
@@ -21,12 +24,15 @@ const SignUpView = () => {
   });
 
   const onSubmit = (data) => {
+    setLoading(true);
     createUser(data);
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let&apos;s create your account</Text>
+    <View useSafeArea flex centerV padding-40 bg-screenBG>
+      <Text text70 marginB-10>
+        Create your account
+      </Text>
 
       <InputBox
         control={control}
@@ -40,7 +46,6 @@ const SignUpView = () => {
         label="First Name"
         name="firstName"
       />
-
       <InputBox
         control={control}
         errors={errors}
@@ -53,7 +58,6 @@ const SignUpView = () => {
         label="Last Name"
         name="lastName"
       />
-
       <InputBox
         control={control}
         errors={errors}
@@ -70,7 +74,6 @@ const SignUpView = () => {
         label="Email"
         name="email"
       />
-
       <InputBox
         control={control}
         errors={errors}
@@ -88,7 +91,6 @@ const SignUpView = () => {
         name="password"
         password
       />
-
       <InputBox
         control={control}
         errors={errors}
@@ -104,10 +106,8 @@ const SignUpView = () => {
         name="confirmPassword"
         password
       />
-
       <PersonalityDropdown control={control} errors={errors} />
-
-      <Text style={styles.redirectText}>
+      <Text>
         If you don&apos;t know your personality, you can discover it by
         completing this{" "}
         <A
@@ -117,39 +117,20 @@ const SignUpView = () => {
           quiz
         </A>
       </Text>
-      <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
-        <Text style={styles.buttonText}> Create </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+      <LoadingButton
+        onPress={handleSubmit(onSubmit)}
+        label="Create Account"
+        loading={loading}
+        marginV-30
+      />
+
+      <View centerH>
+        <Text>Already have an account?</Text>
+
+        <Button link label="Login" />
+      </View>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  header: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 25,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  redirectText: {
-    width: "60%",
-    marginTop: 10,
-  },
-  button: {
-    backgroundColor: "#98D7D0",
-    alignItems: "center",
-    borderRadius: 25,
-    width: "80%",
-    marginTop: 40,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: "Poppins-Bold",
-  },
-});
 
 export default SignUpView;
