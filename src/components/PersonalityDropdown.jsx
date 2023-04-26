@@ -52,6 +52,7 @@ const PersonalityDropdown = ({ control, errors }) => (
                 borderColor: errors.personality ? "red" : "black",
                 paddingVertical: 6,
                 paddingHorizontal: 10,
+                height: 40,
               }}
             >
               {data.map(({ label }) => (

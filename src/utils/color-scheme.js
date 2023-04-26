@@ -1,7 +1,7 @@
 require("react-native-ui-lib/config").setConfig({ appScheme: "default" });
 const { Colors } = require("react-native-ui-lib");
 
-Colors.loadDesignTokens({ primaryColor: "#245B56" });
+Colors.loadDesignTokens({ primaryColor: "#2B2343" });
 
 Colors.loadColors({
   error: "#ff2442",

@@ -53,6 +53,7 @@ const InputBox = ({
                   borderColor: errors[name] ? "red" : "black",
                   paddingVertical: 6,
                   paddingHorizontal: 10,
+                  height: 40,
                 }}
               />
             )}
