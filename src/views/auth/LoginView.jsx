@@ -50,6 +50,7 @@ const LoginView = ({ navigation }) => {
         <InputBox
           control={control}
           errors={errors}
+          placeholder="Enter your email"
           rules={{
             required: {
               message: "This field is required.",
@@ -67,6 +68,7 @@ const LoginView = ({ navigation }) => {
         <InputBox
           control={control}
           errors={errors}
+          placeholder="Enter your password"
           rules={{
             required: {
               message: "This field is required.",

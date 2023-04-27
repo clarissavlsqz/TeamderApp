@@ -25,6 +25,8 @@ const App = () => {
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
     // eslint-disable-next-line global-require
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+    // eslint-disable-next-line global-require
+    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
   });
 
   const [user, userLoading, error] = useAuthState(auth);

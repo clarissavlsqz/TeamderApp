@@ -23,7 +23,7 @@ const InputBox = ({
     <View>
       <View row paddingT-8 paddingB-3>
         <View flex>
-          <Text marginB-5 text90 grey20>
+          <Text marginB-5 text90>
             {label}
           </Text>
           <Controller
@@ -48,7 +48,7 @@ const InputBox = ({
                   )
                 }
                 fieldStyle={{
-                  borderRadius: 5,
+                  borderRadius: 7,
                   borderWidth: 0.75,
                   borderColor: errors[name] ? "red" : "black",
                   paddingVertical: 6,

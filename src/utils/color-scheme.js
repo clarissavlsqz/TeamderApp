@@ -1,13 +1,31 @@
 require("react-native-ui-lib/config").setConfig({ appScheme: "default" });
-const { Colors } = require("react-native-ui-lib");
+const { Colors, ThemeManager } = require("react-native-ui-lib");
 
-Colors.loadDesignTokens({ primaryColor: "#2B2343" });
+Colors.loadDesignTokens({ primaryColor: "#E07000" });
 
 Colors.loadColors({
   error: "#ff2442",
   success: "#00CD8B",
   text: "#20303C",
 });
+
+ThemeManager.setComponentTheme("Text", (props) => ({
+  style: [
+    {
+      fontFamily: "Poppins-Regular",
+    },
+    props.style,
+  ],
+}));
+
+ThemeManager.setComponentTheme("Button", (props) => ({
+  labelStyle: [
+    {
+      fontFamily: "Poppins-Bold",
+    },
+    props.labelStyle,
+  ],
+}));
 
 Colors.loadSchemes({
   light: {
