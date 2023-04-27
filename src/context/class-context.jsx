@@ -6,13 +6,11 @@ import React, {
   useReducer,
 } from "react";
 import {
-  clearSelectedClass,
+  createListeners,
   createClass,
-  createClassListener,
   createDefaultState,
   joinClass,
   reducer,
-  selectClass,
 } from "../reducers/class-reducer";
 import { useUserContext } from "./user-context";
 
@@ -20,14 +18,58 @@ export const ClassContext = createContext();
 
 export const ClassContextProvider = ({ children }) => {
   const { user } = useUserContext();
+  const uid = user?.uid;
 
   const [state, dispatch] = useReducer(reducer, createDefaultState());
+  const { classes, groups, members, users } = state;
 
-  useEffect(() => createClassListener(user, dispatch), [user]);
+  useEffect(() => createListeners(uid, dispatch), [uid]);
+
+  const classmates = useMemo(() => {
+    const userMap = {};
+
+    users.forEach((dbUser) => {
+      userMap[dbUser.id] = dbUser;
+    });
+
+    const memberUserMap = members.map((member) => ({
+      user: userMap[member.userid],
+      ...member,
+    }));
+
+    const newClasses = classes.map((classObj) => ({
+      members: memberUserMap.filter(({ classId }) => classId === classObj.id),
+      ...classObj,
+    }));
+  }, [users, members, classes]);
+
+  const membership = useMemo(() => {
+    if (!uid) {
+      return [];
+    }
+
+    return members.filter(({ userid }) => userid === uid);
+  }, [members, uid]);
+
+  const userClasses = useMemo(() => {
+    if (!uid) {
+      return [];
+    }
+
+    const classIds = new Set(membership.map(({ classid }) => classid));
+    return classes.filter(({ id }) => classIds.has(id));
+  }, [classes, membership, uid]);
 
   const dispatchStateProvider = useMemo(
-    () => [state, dispatch],
-    [state, dispatch]
+    () => [
+      {
+        userClasses,
+        membership,
+        ...state,
+      },
+      dispatch,
+    ],
+    [state, userClasses, dispatch]
   );
 
   return (
@@ -46,18 +88,17 @@ export const useClassContext = () => {
 
   const { user } = useUserContext();
 
-  const [state, dispatch] = context;
+  const [{ classes, selectedClass, membership, userClasses }, dispatch] =
+    context;
 
   return {
-    allClasses: state.classes,
-    userClasses: state.userClasses,
-    selectedClass: state.selectedClass,
+    allClasses: classes,
+    userClasses,
+    selectedClass,
 
     joinClass: (classId, callback) =>
-      joinClass(user, state.membership, state.classes, classId, callback),
+      joinClass(user, membership, classes, classId, callback),
     createClass: (data, callback) =>
       createClass(data, user, callback, dispatch),
-    selectClass: (userClass) => selectClass(userClass, dispatch),
-    deselectClass: () => clearSelectedClass(dispatch),
   };
 };
