@@ -2,7 +2,7 @@ import "react-native-gesture-handler"; // needs to be the first import
 import "./src/utils/color-scheme"; // needs to be the second import
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -19,6 +19,7 @@ import CreateClassSummaryView from "./src/views/main/CreateClassSummaryView";
 
 const Stack = createNativeStackNavigator();
 
+SplashScreen.preventAutoHideAsync();
 const App = () => {
   const [fontsLoaded] = useFonts({
     // eslint-disable-next-line global-require
@@ -29,15 +30,33 @@ const App = () => {
     "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
   });
 
+  const [appIsReady, setAppIsReady] = useState(false);
   const [user, userLoading, error] = useAuthState(auth);
 
   useEffect(() => {
-    SplashScreen.preventAutoHideAsync();
-  }, []);
+    if (appIsReady) {
+      return;
+    }
+
+    setAppIsReady(error || (fontsLoaded && !userLoading));
+  }, [error, fontsLoaded, userLoading]);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   if (error) {
-    SplashScreen.hideAsync();
-
     return (
       <div>
         <p>
@@ -52,12 +71,10 @@ const App = () => {
     return null;
   }
 
-  SplashScreen.hideAsync();
-
   return (
     <AppProvider>
-      <NavigationContainer>
-        {user === null ? (
+      <NavigationContainer onReady={onLayoutRootView}>
+        {user == null ? (
           <Stack.Navigator initialRouteName="Initial">
             <Stack.Screen
               options={{ headerShown: false }}
