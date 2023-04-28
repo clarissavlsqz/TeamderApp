@@ -18,8 +18,7 @@ const Item = ({ item, onPress }) => (
 );
 
 const ClassView = ({ navigation }) => {
-  const { userClasses, allClasses, selectClass, selectedClass } =
-    useClassContext();
+  const { userClasses, allClasses } = useClassContext();
   const { user } = useUserContext();
 
   const classes = useMemo(
@@ -36,19 +35,8 @@ const ClassView = ({ navigation }) => {
     [userClasses, allClasses]
   );
 
-  console.log(selectedClass.classmates);
-
   const renderItem = useMemo(() => {
-    const renderClass = ({ item }) => (
-      <Item
-        item={item}
-        onPress={() => {
-          selectClass(item);
-
-          // navigation.push("ClassInfo");
-        }}
-      />
-    );
+    const renderClass = ({ item }) => <Item item={item} />;
 
     return renderClass;
   }, []);

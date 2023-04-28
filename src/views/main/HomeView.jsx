@@ -1,124 +1,73 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-  onSnapshot,
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-} from "firebase/firestore";
-import {
-  SafeAreaView,
-  StyleSheet,
-  StatusBar,
-  View,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
-import { auth, db } from "../../../firebaseConfig";
-import TeammatesView from "../../components/TeammatesModal";
+import React, { useMemo } from "react";
+import { Avatar, Card, Text, View } from "react-native-ui-lib";
+import { StatusBar } from "expo-status-bar";
+import { FlatList, StyleSheet } from "react-native";
+import { EvilIcons } from "@expo/vector-icons";
+import { useClassContext } from "../../context/class-context";
 
 const TeamItem = ({ item }) => (
-  <View style={styles.item}>
-    <Text style={styles.team}>{item.team}</Text>
-    <Text style={styles.class}>{item.class}</Text>
-  </View>
+  <Card
+    key={item.id}
+    style={{
+      marginVertical: 8,
+      marginHorizontal: 16,
+      borderRadius: 25,
+      elevation: 5,
+    }}
+    onPress={() => console.log(item.members)}
+  >
+    <View padding-20>
+      <View row spread>
+        <Text text40 $textDefault>
+          {item.name}
+        </Text>
+
+        <EvilIcons name="arrow-right" color="black" size={32} />
+      </View>
+      <View row>
+        <Text text90>{item.class.name}</Text>
+        <Text text90 $textDefault>
+          {" "}
+          | {item.class.id}
+        </Text>
+      </View>
+
+      <Text text70 $textDefault marginV-6>
+        People ({item.members.length})
+      </Text>
+
+      <View row>
+        {item.members.map((member) => (
+          <Avatar
+            key={member.userid}
+            label={`${member.user.firstName[0]}${member.user.lastName[0]}`}
+            size={32}
+          />
+        ))}
+      </View>
+    </View>
+  </Card>
 );
 
 const HomeView = () => {
-  const [userGroups, setUserGroups] = useState([]);
-  const [groupsOfUser, setGroupsOfUser] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [groupID, setGroupID] = useState("");
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    const memberRef = collection(db, "member");
-
-    const unsubscribe = onSnapshot(
-      memberRef,
-      async (querySnapshot) => {
-        const groups = [];
-        querySnapshot.forEach((memberDoc) => {
-          if (memberDoc.data().userid === user.uid) {
-            if (memberDoc.data().groupid !== "") {
-              groups.push(memberDoc.data().groupid);
-            }
-          }
-        });
-        setUserGroups(groups);
-        const querySnapshotGroups = await getDocs(collection(db, "group"));
-        const groupsUserIsIn = [];
-        await Promise.all(
-          groups.map(async (groupUser) => {
-            await Promise.all(
-              querySnapshotGroups.docs.map(async (doc2) => {
-                if (doc2.id === groupUser) {
-                  const groupItem = {};
-                  groupItem.team = doc2.data().name;
-                  groupItem.groupID = doc2.id;
-                  const classIDOfGroup = doc2.data().fromclass;
-                  const docRef = await getDoc(doc(db, "class", classIDOfGroup));
-                  groupItem.class = docRef.data().name;
-                  groupsUserIsIn.push(groupItem);
-                }
-              })
-            );
-          })
-        );
-        setGroupsOfUser(groupsUserIsIn);
-        console.log("Groups:", groupsUserIsIn);
-      },
-
-      (error) => {
-        console.error(error);
-      }
-    );
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
+  const { userGroups } = useClassContext();
 
   const renderItem = useMemo(() => {
-    const render = ({ item }) => (
-      <TouchableOpacity
-        onPress={() => {
-          setIsModalVisible(true);
-          setGroupID(item.groupID);
-        }}
-      >
-        <TeamItem item={item} />
-      </TouchableOpacity>
-    );
+    const render = ({ item }) => <TeamItem item={item} />;
 
     return render;
-  }, [setIsModalVisible, setGroupID]);
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <FlatList
         keyboardShouldPersistTaps="handled"
-        data={groupsOfUser}
+        data={userGroups}
         renderItem={renderItem}
-        keyExtractor={(item) => item.groupID}
+        keyExtractor={(item) => item.id}
       />
-      {isModalVisible && (
-        <View>
-          <TeammatesView
-            isVisible={isModalVisible}
-            closeModal={closeModal}
-            groupID={groupID}
-          />
-        </View>
-      )}
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -64,7 +64,7 @@ export const createListeners = (uid, dispatch) => {
   }
 
   const classRef = collection(db, "class");
-  const usersRef = collection(db, "user");
+  const usersRef = collection(db, "users");
   const membersRef = collection(db, "member");
   const groupsRef = collection(db, "group");
 
@@ -84,7 +84,12 @@ export const createListeners = (uid, dispatch) => {
     usersRef,
     async (querySnapshot) => {
       dispatch(
-        fetchUsersResponse(querySnapshot.docs.map((userDoc) => userDoc.data()))
+        fetchUsersResponse(
+          querySnapshot.docs.map((userDoc) => ({
+            id: userDoc.id,
+            ...userDoc.data(),
+          }))
+        )
       );
     },
     errorHandler
@@ -107,7 +112,10 @@ export const createListeners = (uid, dispatch) => {
     async (querySnapshot) => {
       dispatch(
         fetchGroupsResponse(
-          querySnapshot.docs.map((groupDoc) => groupDoc.data())
+          querySnapshot.docs.map((groupDoc) => ({
+            id: groupDoc.id,
+            ...groupDoc.data(),
+          }))
         )
       );
     },
