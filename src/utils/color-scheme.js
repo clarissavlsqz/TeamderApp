@@ -30,6 +30,7 @@ ThemeManager.setComponentTheme("Button", (props) => ({
 Colors.loadSchemes({
   light: {
     screenBG: "transparent",
+    inputOutline: "#c2c2c2",
     textColor: Colors.grey10,
     moonOrSun: Colors.yellow30,
     mountainForeground: Colors.green30,
@@ -39,6 +40,7 @@ Colors.loadSchemes({
   },
   dark: {
     screenBG: Colors.grey10,
+    inputOutline: "#c2c2c2",
     textColor: Colors.white,
     moonOrSun: Colors.grey80,
     mountainForeground: Colors.violet10,

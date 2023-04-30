@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { Avatar, Card, Text, View } from "react-native-ui-lib";
+import { Card, Text, View } from "react-native-ui-lib";
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
-import { useClassContext } from "../../context/class-context";
+import { useClassContext } from "../../../context/class-context";
+import UserAvatar from "../../../components/UserAvatar";
 
 const TeamItem = ({ item }) => (
   <Card
@@ -38,11 +39,7 @@ const TeamItem = ({ item }) => (
 
       <View row>
         {item.members.map((member) => (
-          <Avatar
-            key={member.userid}
-            label={`${member.user.firstName[0]}${member.user.lastName[0]}`}
-            size={32}
-          />
+          <UserAvatar key={member.userid} user={member.user} />
         ))}
       </View>
     </View>

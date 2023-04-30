@@ -2,7 +2,7 @@ import React from "react";
 import { Controller } from "react-hook-form";
 import { Picker } from "react-native-ui-lib/src/components/picker";
 import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native-ui-lib";
+import { Colors, Text, View } from "react-native-ui-lib";
 
 const data = [
   { label: "INTJ", value: "INTJ" },
@@ -44,12 +44,16 @@ const PersonalityDropdown = ({ control, errors }) => (
               value={value}
               onBlur={onBlur}
               trailingAccessory={
-                <Ionicons name="caret-down-outline" color="black" size={24} />
+                <Ionicons
+                  name="caret-down-outline"
+                  color={Colors.inputOutline}
+                  size={16}
+                />
               }
               fieldStyle={{
                 borderRadius: 5,
                 borderWidth: 0.75,
-                borderColor: errors.personality ? "red" : "black",
+                borderColor: errors.personality ? "red" : Colors.inputOutline,
                 paddingVertical: 6,
                 paddingHorizontal: 10,
                 height: 40,

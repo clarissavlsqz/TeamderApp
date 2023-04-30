@@ -7,8 +7,8 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { useClassContext } from "../../context/class-context";
-import { useUserContext } from "../../context/user-context";
+import { useClassContext } from "../../../context/class-context";
+import { useUserContext } from "../../../context/user-context";
 
 const Item = ({ item, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.item}>

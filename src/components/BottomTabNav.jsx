@@ -7,10 +7,10 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import HomeView from "../views/main/HomeView";
-import ClassView from "../views/main/ClassView";
-import NotificationsView from "../views/main/NotificationsView";
-import ProfileView from "../views/main/ProfileView";
+import TeamsView from "../views/main/teams/TeamsView";
+import ClassView from "../views/main/class/ClassView";
+import NotificationsView from "../views/main/notifications/NotificationsView";
+import ProfileView from "../views/main/profile/ProfileView";
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +48,7 @@ const BottomTabNav = ({ navigation }) => (
   >
     <Tab.Screen
       name="Home"
-      component={HomeView}
+      component={TeamsView}
       options={{
         headerShown: true,
         headerBackVisible: false,

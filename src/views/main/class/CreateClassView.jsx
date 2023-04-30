@@ -2,8 +2,8 @@ import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { customAlphabet } from "nanoid/non-secure";
-import InputBox from "../../components/InputBox";
-import { useClassContext } from "../../context/class-context";
+import InputBox from "../../../components/InputBox";
+import { useClassContext } from "../../../context/class-context";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 

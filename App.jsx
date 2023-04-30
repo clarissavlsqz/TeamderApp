@@ -10,12 +10,12 @@ import InitialView from "./src/views/auth/InitialView";
 import SignUpView from "./src/views/auth/SignUpView";
 import LoginView from "./src/views/auth/LoginView";
 import BottomTabNav from "./src/components/BottomTabNav";
-import AddClassView from "./src/views/main/AddClassView";
+import AddClassView from "./src/views/main/class/AddClassView";
 import { auth } from "./firebaseConfig";
-import CreateClassView from "./src/views/main/CreateClassView";
+import CreateClassView from "./src/views/main/class/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
-import EditProfile from "./src/views/main/EditProfileView";
-import CreateClassSummaryView from "./src/views/main/CreateClassSummaryView";
+import EditProfile from "./src/views/main/profile/EditProfileView";
+import CreateClassSummaryView from "./src/views/main/class/CreateClassSummaryView";
 
 const Stack = createNativeStackNavigator();
 
