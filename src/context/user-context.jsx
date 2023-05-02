@@ -52,7 +52,7 @@ export const useUserContext = () => {
   return {
     user: state.user,
 
-    updateProfile: (data) => updateUserProfile(data, dispatch),
+    updateProfile: (data, cb) => updateUserProfile(data, dispatch, cb),
     createUser: (data) => createUserProfile(data, dispatch),
   };
 };
