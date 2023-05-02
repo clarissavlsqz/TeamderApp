@@ -11,6 +11,7 @@ import TeamsView from "../views/main/teams/TeamsView";
 import ClassView from "../views/main/class/ClassView";
 import NotificationsView from "../views/main/notifications/NotificationsView";
 import ProfileView from "../views/main/profile/ProfileView";
+import CreateOrJoinView from "../views/main/class/CreateOrJoin";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,13 +34,20 @@ const BottomTabNav = ({ navigation }) => (
         } else if (route.name === "Profile") {
           iconName = focused ? "account-circle" : "account-circle-outline";
           isMaterialIcon = true;
+        } else if (route.name === "CreateOrJoin") {
+          iconName = focused ? "add-circle" : "add-circle-outline";
+          isMaterialIcon = false;
         }
 
         // You can return any component that you like here!
         return isMaterialIcon ? (
           <MaterialCommunityIcons name={iconName} size={size} color={color} />
         ) : (
-          <Ionicons name={iconName} size={size} color={color} />
+          <Ionicons
+            name={iconName}
+            size={route.name === "CreateOrJoin" ? 36 : size}
+            color={color}
+          />
         );
       },
       tabBarActiveTintColor: "#2B2343",
@@ -84,6 +92,20 @@ const BottomTabNav = ({ navigation }) => (
     />
 
     <Tab.Screen
+      name="CreateOrJoin"
+      component={CreateOrJoinView}
+      options={{
+        headerShown: true,
+        headerBackVisible: false,
+        title: "",
+        headerStyle: {
+          backgroundColor: "#2B2343",
+        },
+        headerTintColor: "#F5F5F5",
+      }}
+    />
+
+    <Tab.Screen
       name="Notifications"
       component={NotificationsView}
       options={{
@@ -96,6 +118,7 @@ const BottomTabNav = ({ navigation }) => (
         headerTintColor: "#F5F5F5",
       }}
     />
+
     <Tab.Screen
       name="Profile"
       component={ProfileView}
@@ -107,16 +130,6 @@ const BottomTabNav = ({ navigation }) => (
           backgroundColor: "#2B2343",
         },
         headerTintColor: "#F5F5F5",
-        headerRight: () => (
-          <View style={styles.createGroupIcon}>
-            <MaterialIcons
-              name="edit"
-              color="#F5F5F5"
-              size={24}
-              onPress={() => navigation.push("EditProfile")}
-            />
-          </View>
-        ),
       }}
     />
   </Tab.Navigator>

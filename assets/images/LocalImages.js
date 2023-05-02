@@ -16,10 +16,11 @@ const avatars = {
 };
 
 const images = {
-  // eslint-disable-next-line global-require
   logo: require("./teamderLogoTransparent.png"),
-  // eslint-disable-next-line global-require
   logo2: require("./teamderLogoTransparentCropped.png"),
+
+  studying: require("./studying.png"),
+  teaching: require("./teaching.png"),
 
   avatars,
 };
