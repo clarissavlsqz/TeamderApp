@@ -39,7 +39,14 @@ const TeamItem = ({ item }) => (
 
       <View row>
         {item.members.map((member) => (
-          <UserAvatar key={member.userid} user={member.user} />
+          <View
+            key={member.userid}
+            style={{
+              marginRight: -6,
+            }}
+          >
+            <UserAvatar user={member.user} />
+          </View>
         ))}
       </View>
     </View>

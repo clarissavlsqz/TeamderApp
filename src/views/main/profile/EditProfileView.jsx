@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native-ui-lib";
 import { StatusBar } from "expo-status-bar";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useUserContext } from "../../../context/user-context";
 import InputBox from "../../../components/InputBox";
 import PersonalityDropdown from "../../../components/PersonalityDropdown";
@@ -39,7 +40,17 @@ const EditProfile = ({ navigation }) => {
       <View useSafeArea flex margin-40 bg-screenBG>
         <StatusBar barStyle="light-content" />
         <View centerH marginB-30>
-          <UserAvatar user={user} size={100} />
+          <UserAvatar
+            user={user}
+            size={100}
+            badgePosition="BOTTOM_RIGHT"
+            badgeProps={{
+              customElement: (
+                <MaterialIcons name="edit" color="#F5F5F5" size={14} />
+              ),
+              size: 28,
+            }}
+          />
         </View>
 
         <View>
