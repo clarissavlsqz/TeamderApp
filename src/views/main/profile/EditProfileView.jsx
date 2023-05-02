@@ -41,6 +41,10 @@ const EditProfile = ({ navigation }) => {
     [setValue, setPopupVisible]
   );
 
+  const onDismiss = useCallback(() => {
+    setPopupVisible(false);
+  }, [setPopupVisible]);
+
   if (user === null) {
     return null;
   }
@@ -57,7 +61,7 @@ const EditProfile = ({ navigation }) => {
     <>
       <AvatarPicker
         visible={popupVisible}
-        onDismiss={() => setPopupVisible(false)}
+        onDismiss={onDismiss}
         selectAvatar={selectAvatar}
         selectedAvatar={selectedAvatar}
       />
