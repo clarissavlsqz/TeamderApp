@@ -1,15 +1,17 @@
 import React from "react";
+import { Text, View } from "react-native-ui-lib";
+import { StatusBar } from "expo-status-bar";
 import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+  MaterialIcons,
+  MaterialCommunityIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 import { auth } from "../../../../firebaseConfig";
 import { useUserContext } from "../../../context/user-context";
+import UserAvatar from "../../../components/UserAvatar";
+import MenuItem from "../../../components/MenuItem";
 
-const ProfileView = () => {
+const ProfileView = ({ navigation }) => {
   const { user } = useUserContext();
 
   const onLogout = () => {
@@ -21,53 +23,44 @@ const ProfileView = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View useSafeArea flex margin-40 bg-screenBG>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.profileText}>
-        {" "}
-        <Text style={styles.boldText}>Name:</Text> {user.firstName}{" "}
-        {user.lastName}
-      </Text>
-      <Text style={styles.profileText}>
-        {" "}
-        <Text style={styles.boldText}>Email:</Text> {user.email}
-      </Text>
-      <Text style={styles.profileText}>
-        {" "}
-        <Text style={styles.boldText}>Personality:</Text> {user.personality}
-      </Text>
+      <View centerH marginB-30 marginT-20>
+        <UserAvatar user={user} size={100} />
 
-      <TouchableOpacity style={styles.button} onPress={onLogout}>
-        <Text style={styles.buttonText}> Logout </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <Text marginT-10 text60>
+          {user.firstName} {user.lastName}
+        </Text>
+
+        <Text text80>Personality {user.personality}</Text>
+      </View>
+
+      <View flexG centerV>
+        <View bg-screenPop br60 paddingV-20 paddingH-10>
+          <MenuItem
+            label="Settings"
+            icon={<AntDesign name="setting" size={24} color="black" />}
+          />
+          <MenuItem
+            label="Edit Profile"
+            onPress={() => navigation.push("EditProfile")}
+            icon={
+              <MaterialCommunityIcons
+                name="account-edit"
+                size={24}
+                color="black"
+              />
+            }
+          />
+          <MenuItem
+            label="Log Out"
+            icon={<MaterialIcons name="logout" size={24} color="black" />}
+            onPress={onLogout}
+          />
+        </View>
+      </View>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  profileText: {
-    fontSize: 20,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  boldText: {
-    fontWeight: "bold",
-  },
-  button: {
-    backgroundColor: "#98D7D0",
-    alignItems: "center",
-    borderRadius: 25,
-    width: "80%",
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: "Poppins-Bold",
-  },
-});
 
 export default ProfileView;
