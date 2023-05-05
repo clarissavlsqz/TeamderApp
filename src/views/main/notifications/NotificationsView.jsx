@@ -3,7 +3,7 @@ import { SafeAreaView, StatusBar } from "react-native";
 
 const NotificationsView = () => (
   <SafeAreaView>
-    <StatusBar barStyle="light-content" />
+    <StatusBar style="light" />
   </SafeAreaView>
 );
 

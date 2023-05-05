@@ -1,41 +1,58 @@
-/* eslint-disable react/jsx-filename-extension */
-import "react-native-gesture-handler";
+import "react-native-gesture-handler"; // needs to be the first import
+import "./src/utils/color-scheme"; // needs to be the second import
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebaseConfig";
 import InitialView from "./src/views/auth/InitialView";
 import SignUpView from "./src/views/auth/SignUpView";
 import LoginView from "./src/views/auth/LoginView";
 import BottomTabNav from "./src/components/BottomTabNav";
-import AddClassView from "./src/views/main/AddClassView";
-import { auth } from "./firebaseConfig";
-import CreateClassView from "./src/views/main/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
-import EditProfile from "./src/views/main/EditProfileView";
-import CreateClassSummaryView from "./src/views/main/CreateClassSummaryView";
 
 const Stack = createNativeStackNavigator();
 
+SplashScreen.preventAutoHideAsync();
 const App = () => {
   const [fontsLoaded] = useFonts({
     // eslint-disable-next-line global-require
     Quicksand: require("./assets/fonts/Quicksand-VariableFont_wght.ttf"),
     // eslint-disable-next-line global-require
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+    // eslint-disable-next-line global-require
+    "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
   });
 
+  const [appIsReady, setAppIsReady] = useState(false);
   const [user, userLoading, error] = useAuthState(auth);
 
   useEffect(() => {
-    SplashScreen.preventAutoHideAsync();
-  }, []);
+    if (appIsReady) {
+      return;
+    }
+
+    setAppIsReady(error || (fontsLoaded && !userLoading));
+  }, [error, fontsLoaded, userLoading]);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   if (error) {
-    SplashScreen.hideAsync();
-
     return (
       <div>
         <p>
@@ -50,12 +67,10 @@ const App = () => {
     return null;
   }
 
-  SplashScreen.hideAsync();
-
   return (
     <AppProvider>
-      <NavigationContainer>
-        {user === null ? (
+      <NavigationContainer onReady={onLayoutRootView}>
+        {user == null ? (
           <Stack.Navigator initialRouteName="Initial">
             <Stack.Screen
               options={{ headerShown: false }}
@@ -79,26 +94,6 @@ const App = () => {
               name="Tab"
               component={BottomTabNav}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AddClass"
-              component={AddClassView}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="CreateClass"
-              component={CreateClassView}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="CreateClassSummary"
-              component={CreateClassSummaryView}
-              options={{ headerShown: true }}
             />
           </Stack.Navigator>
         )}

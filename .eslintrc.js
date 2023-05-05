@@ -25,6 +25,7 @@ module.exports = {
       2,
       { namedComponents: "arrow-function" },
     ],
+    "react/style-prop-object": [2, { allow: ["StatusBar"] }],
     "no-unused-vars": [
       "warn", // or "error"
       {

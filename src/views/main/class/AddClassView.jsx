@@ -7,7 +7,7 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { useClassContext } from "../../context/class-context";
+import { useClassContext } from "../../../context/class-context";
 
 const AddClassView = ({ navigation }) => {
   const [classInputID, setClassInputID] = useState("");

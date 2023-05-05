@@ -51,4 +51,36 @@ const styles = StyleSheet.create({
   },
 });
 
+/*
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+  },
+
+  button: {
+    backgroundColor: "#E07000",
+    alignItems: "center",
+    borderRadius: 5,
+    width: "80%",
+    marginTop: 25,
+  },
+
+  text: {
+    fontSize: 18,
+    color: "#FFFFFF",
+    paddingVertical: 10,
+    fontFamily: "Poppins-Bold",
+  },
+
+  logo: {
+    width: 261,
+    height: 41,
+    marginBottom: 150,
+  },
+});
+*/
+
 export default InitialView;

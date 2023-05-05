@@ -16,7 +16,7 @@ export const reducer = (state, action) => {
   }
 };
 
-export const fetchUser = (dispatch) => {
+export const fetchUser = (dispatch, cb) => {
   const user = auth.currentUser;
 
   if (user === null) {
@@ -33,15 +33,20 @@ export const fetchUser = (dispatch) => {
           firstName: userDoc.get("firstName"),
           lastName: userDoc.get("lastName"),
           personality: userDoc.get("personality"),
+          avatar: userDoc.get("avatar"),
           email: user.email,
           uid: user.uid,
         })
       );
+
+      if (cb) {
+        cb();
+      }
     })
     .catch(() => {});
 };
 
-export const updateUserProfile = (profile, dispatch) => {
+export const updateUserProfile = (profile, dispatch, cb) => {
   const user = auth.currentUser;
 
   if (user === null) {
@@ -52,10 +57,11 @@ export const updateUserProfile = (profile, dispatch) => {
 
   updateDoc(doc(usersRef, user.uid), profile)
     .then(() => {
-      fetchUser(dispatch);
+      fetchUser(dispatch, cb);
     })
     .catch((err) => {
       console.error(err);
+      cb(err);
     });
 };
 

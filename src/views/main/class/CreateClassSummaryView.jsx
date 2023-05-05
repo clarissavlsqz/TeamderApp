@@ -4,9 +4,9 @@ import { getDocs, collection, addDoc, updateDoc } from "firebase/firestore";
 import {
   personalityTable,
   personalityWeightTable,
-} from "../../../personalityTables";
-import { db } from "../../../firebaseConfig";
-import { useClassContext } from "../../context/class-context";
+} from "../../../../personalityTables";
+import { db } from "../../../../firebaseConfig";
+import { useClassContext } from "../../../context/class-context";
 
 const CreateClassSummaryView = () => {
   const { selectedClass } = useClassContext();

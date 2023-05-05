@@ -1,89 +1,104 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useState } from "react";
+import { Image } from "expo-image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
+import { Button, Text, View } from "react-native-ui-lib";
 import { auth } from "../../../firebaseConfig";
 import InputBox from "../../components/InputBox";
+import LoadingButton from "../../components/LoadingButton";
+import LocalImages from "../../../assets/images/LocalImages";
+import EnhancedKeyboardAvoidingView from "../../components/EnhancedKeyboardAvoidingView";
 
-const LoginView = () => {
+const LoginView = ({ navigation }) => {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
+  const [loading, setLoading] = useState(false);
+
   const onLogin = ({ email, password }) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const { user } = userCredential;
-        console.log("SIGNED IN!!");
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+    setLoading(true);
+
+    signInWithEmailAndPassword(auth, email, password).catch((error) => {
+      const errorMessage = error.message;
+      setError("password", {
+        message: errorMessage,
       });
+      setLoading(false);
+    });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <InputBox
-        control={control}
-        errors={errors}
-        rules={{
-          required: {
-            message: "This field is required.",
-            value: true,
-          },
-          pattern: {
-            message: "Invalid email",
-            value: /^\S+@\S+$/i,
-          },
-        }}
-        label="Email"
-        name="email"
-      />
+    <EnhancedKeyboardAvoidingView>
+      <View useSafeArea flex centerV margin-40 bg-screenBG>
+        <View centerH paddingB-80>
+          <Image
+            source={LocalImages.logo2}
+            style={{ width: 261, height: 41 }}
+          />
+        </View>
 
-      <InputBox
-        control={control}
-        errors={errors}
-        rules={{
-          required: {
-            message: "This field is required.",
-            value: true,
-          },
-        }}
-        label="Password"
-        name="password"
-        password
-      />
+        <View>
+          <Text text70 marginB-10>
+            Login to your account
+          </Text>
+        </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit(onLogin)}>
-        <Text style={styles.buttonText}> Login </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <InputBox
+          control={control}
+          errors={errors}
+          placeholder="Enter your email"
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+            pattern: {
+              message: "Invalid email",
+              value: /^\S+@\S+$/i,
+            },
+          }}
+          label="Email"
+          name="email"
+        />
+
+        <InputBox
+          control={control}
+          errors={errors}
+          placeholder="Enter your password"
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+          }}
+          label="Password"
+          name="password"
+          password
+        />
+
+        <LoadingButton
+          onPress={handleSubmit(onLogin)}
+          label="Sign In"
+          loading={loading}
+          marginV-30
+        />
+
+        <View centerH>
+          <Text>Don&#39;t have an account?</Text>
+
+          <Button
+            link
+            label="Register"
+            onPress={() => navigation.replace("SignUp")}
+          />
+        </View>
+      </View>
+    </EnhancedKeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  button: {
-    backgroundColor: "#98D7D0",
-    alignItems: "center",
-    borderRadius: 25,
-    width: "80%",
-    marginTop: 40,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: "Poppins-Bold",
-  },
-});
 
 export default LoginView;
