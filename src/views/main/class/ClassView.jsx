@@ -53,7 +53,7 @@ const ClassItem = ({ item }) => (
     </View>
   </Card>
 );
-const ClassView = ({ navigation }) => {
+const ClassView = () => {
   const { userClasses, allClasses } = useClassContext();
   const { user } = useUserContext();
 
@@ -76,19 +76,13 @@ const ClassView = ({ navigation }) => {
     [userClasses, adminClasses]
   );
 
-  const renderItem = useMemo(() => {
-    const renderClass = ({ item }) => <ClassItem item={item} />;
-
-    return renderClass;
-  }, []);
-
   return (
     <View SafeAreaView flex>
-      <StatusBar barStyle="light-content" />
+      <StatusBar style="light" />
       <FlatList
         data={classes}
         keyExtractor={(item) => item.key ?? item.id}
-        renderItem={renderItem}
+        renderItem={ClassItem}
       />
     </View>
   );

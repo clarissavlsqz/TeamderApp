@@ -24,7 +24,7 @@ const ProfileView = ({ navigation }) => {
 
   return (
     <View useSafeArea flex margin-40 bg-screenBG>
-      <StatusBar barStyle="light-content" />
+      <StatusBar style="light" />
       <View centerH marginB-30 marginT-20>
         <UserAvatar user={user} size={100} />
 

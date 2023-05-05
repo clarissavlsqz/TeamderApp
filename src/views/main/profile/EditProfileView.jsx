@@ -67,7 +67,7 @@ const EditProfile = ({ navigation }) => {
       />
       <EnhancedKeyboardAvoidingView>
         <View useSafeArea flex margin-40 bg-screenBG>
-          <StatusBar barStyle="light-content" />
+          <StatusBar style="light" />
           <View centerH marginB-30>
             <UserAvatar
               user={user}

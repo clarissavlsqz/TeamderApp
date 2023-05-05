@@ -6,7 +6,7 @@ import MenuItem from "../../../components/MenuItem";
 
 const CreateOrJoinView = ({ navigation }) => (
   <View useSafeArea flex margin-40 bg-screenBG>
-    <StatusBar barStyle="light-content" />
+    <StatusBar style="light" />
     <View flexG>
       <Text text60 center marginB-10>
         Join or Create a Class

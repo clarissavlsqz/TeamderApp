@@ -6,16 +6,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebaseConfig";
 import InitialView from "./src/views/auth/InitialView";
 import SignUpView from "./src/views/auth/SignUpView";
 import LoginView from "./src/views/auth/LoginView";
 import BottomTabNav from "./src/components/BottomTabNav";
-import AddClassView from "./src/views/main/class/AddClassView";
-import { auth } from "./firebaseConfig";
-import CreateClassView from "./src/views/main/class/CreateClassView";
 import AppProvider from "./src/components/AppProvider";
-import EditProfile from "./src/views/main/profile/EditProfileView";
-import CreateClassSummaryView from "./src/views/main/class/CreateClassSummaryView";
 
 const Stack = createNativeStackNavigator();
 
@@ -98,26 +94,6 @@ const App = () => {
               name="Tab"
               component={BottomTabNav}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AddClass"
-              component={AddClassView}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="EditProfile"
-              component={EditProfile}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="CreateClass"
-              component={CreateClassView}
-              options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="CreateClassSummary"
-              component={CreateClassSummaryView}
-              options={{ headerShown: true }}
             />
           </Stack.Navigator>
         )}
