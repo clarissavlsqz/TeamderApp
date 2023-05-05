@@ -1,9 +1,11 @@
 import React from "react";
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { customAlphabet } from "nanoid/non-secure";
+import { Text, View } from "react-native-ui-lib";
 import InputBox from "../../../components/InputBox";
 import { useClassContext } from "../../../context/class-context";
+import EnhancedKeyboardAvoidingView from "../../../components/EnhancedKeyboardAvoidingView";
+import LoadingButton from "../../../components/LoadingButton";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
@@ -30,79 +32,62 @@ const CreateClassView = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Let&apos;s create your class</Text>
-      <InputBox
-        control={control}
-        errors={errors}
-        rules={{
-          required: {
-            message: "This field is required.",
-            value: true,
-          },
-        }}
-        label="Class Name"
-        name="className"
-      />
+    <EnhancedKeyboardAvoidingView>
+      <View useSafeArea flex margin-40 bg-screenBG>
+        <View centerH marginB-30>
+          <Text marginT-10 text60>
+            Let&apos;s create your class
+          </Text>
+        </View>
 
-      <InputBox
-        control={control}
-        errors={errors}
-        rules={{
-          required: {
-            message: "This field is required.",
-            value: true,
-          },
-        }}
-        label="Class Description"
-        name="classDesc"
-      />
+        <InputBox
+          control={control}
+          errors={errors}
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+          }}
+          label="Class Name"
+          name="className"
+        />
 
-      <InputBox
-        control={control}
-        errors={errors}
-        rules={{
-          required: {
-            message: "This field is required.",
-            value: true,
-          },
-        }}
-        label="Capacity"
-        name="capacity"
-      />
+        <InputBox
+          control={control}
+          errors={errors}
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+          }}
+          label="Class Description"
+          name="classDesc"
+        />
 
-      <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.button}>
-        <Text style={styles.buttonText}> Create Class </Text>
-      </TouchableOpacity>
+        <InputBox
+          control={control}
+          errors={errors}
+          rules={{
+            required: {
+              message: "This field is required.",
+              value: true,
+            },
+          }}
+          label="Capacity"
+          name="capacity"
+        />
 
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-      <Text />
-    </SafeAreaView>
+        <LoadingButton
+          onPress={handleSubmit(onSubmit)}
+          label="Create Class"
+          loading={false}
+          marginV-30
+        />
+      </View>
+    </EnhancedKeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  header: {
-    fontFamily: "Poppins-Bold",
-    fontSize: 25,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  button: {
-    marginTop: 40,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: "Poppins-Bold",
-  },
-});
 
 export default CreateClassView;
