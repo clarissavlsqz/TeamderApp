@@ -85,7 +85,7 @@ export const ClassContextProvider = ({ children }) => {
     });
 
     const newClasses = rawClasses.map((classObj) => ({
-      members: members.filter(({ classId }) => classId === classObj.id),
+      members: members.filter(({ classid }) => classid === classObj.id),
       ...classObj,
     }));
 

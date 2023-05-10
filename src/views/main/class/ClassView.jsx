@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Card, Text, View } from "react-native-ui-lib";
+import { Card, Chip, Text, View } from "react-native-ui-lib";
 import { EvilIcons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
@@ -16,7 +16,7 @@ const ClassItem = ({ item }) => (
       borderRadius: 25,
       elevation: 5,
     }}
-    onPress={() => console.log(item.members)}
+    onPress={() => console.log(item.isAdmin)}
   >
     <View padding-20>
       <View row spread>
@@ -49,6 +49,21 @@ const ClassItem = ({ item }) => (
             <UserAvatar user={member.user} />
           </View>
         ))}
+        <View flex right>
+          {item.isAdmin ? (
+            <Chip
+              label="Admin"
+              backgroundColor="#F4D06F"
+              containerStyle={{ borderWidth: 0 }}
+            />
+          ) : (
+            <Chip
+              label="Member"
+              backgroundColor="#98D7D0"
+              containerStyle={{ borderWidth: 0 }}
+            />
+          )}
+        </View>
       </View>
     </View>
   </Card>
@@ -75,7 +90,7 @@ const ClassView = () => {
     () => [...userClasses, ...adminClasses],
     [userClasses, adminClasses]
   );
-
+  console.log(classes);
   return (
     <View SafeAreaView flex>
       <StatusBar style="light" />
