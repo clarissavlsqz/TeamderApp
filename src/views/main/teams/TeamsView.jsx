@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Card, Text, View } from "react-native-ui-lib";
+import { Card, Text, TextField, View } from "react-native-ui-lib";
 import { StatusBar } from "expo-status-bar";
 import { FlatList } from "react-native";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, Feather } from "@expo/vector-icons";
 import { useClassContext } from "../../../context/class-context";
 import UserAvatar from "../../../components/UserAvatar";
 import TeammatesModal from "../../../components/TeammatesModal";
@@ -10,6 +10,8 @@ import TeammatesModal from "../../../components/TeammatesModal";
 const TeamItem = ({ item, listMembers, checkItemPressed }) => {
   const returnMembers = item.members;
   const wasPress = true;
+  const [isEditing, setIsEditing] = useState(false);
+  const [teamName, setTeamName] = useState("");
 
   return (
     <Card
@@ -28,9 +30,13 @@ const TeamItem = ({ item, listMembers, checkItemPressed }) => {
     >
       <View padding-20>
         <View row spread>
-          <Text text40 $textDefault>
-            {item.name}
-          </Text>
+          {isEditing ? (
+            <TextField placeholder="Team Name" onChangeText={setTeamName} />
+          ) : (
+            <Text text40 $textDefault>
+              {item.name}
+            </Text>
+          )}
 
           <EvilIcons name="arrow-right" color="black" size={32} />
         </View>
@@ -57,6 +63,20 @@ const TeamItem = ({ item, listMembers, checkItemPressed }) => {
               <UserAvatar user={member.user} />
             </View>
           ))}
+          <View marginT-3 marginR-3 flex right>
+            {isEditing ? (
+              <Text text70 $textDefault onPress={() => setIsEditing(false)}>
+                Save
+              </Text>
+            ) : (
+              <Feather
+                name="edit"
+                size={24}
+                color="black"
+                onPress={() => setIsEditing(true)}
+              />
+            )}
+          </View>
         </View>
       </View>
     </Card>
