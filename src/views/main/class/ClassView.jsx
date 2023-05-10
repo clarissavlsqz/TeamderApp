@@ -38,22 +38,6 @@ const ClassItem = ({ item }) => (
         People ({item.members.length})
       </Text>
 
-      <View flex left>
-        {item.isAdmin ? (
-          <Chip
-            label="Admin"
-            backgroundColor="#F4D06F"
-            containerStyle={{ borderWidth: 0 }}
-          />
-        ) : (
-          <Chip
-            label="Member"
-            backgroundColor="#98D7D0"
-            containerStyle={{ borderWidth: 0 }}
-          />
-        )}
-      </View>
-
       <View row>
         {item.members.map((member) => (
           <View
@@ -65,6 +49,21 @@ const ClassItem = ({ item }) => (
             <UserAvatar user={member.user} />
           </View>
         ))}
+        <View flex right>
+          {item.isAdmin ? (
+            <Chip
+              label="Admin"
+              backgroundColor="#F4D06F"
+              containerStyle={{ borderWidth: 0 }}
+            />
+          ) : (
+            <Chip
+              label="Member"
+              backgroundColor="#98D7D0"
+              containerStyle={{ borderWidth: 0 }}
+            />
+          )}
+        </View>
       </View>
     </View>
   </Card>
