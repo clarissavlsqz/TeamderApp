@@ -7,7 +7,7 @@ import { useClassContext } from "../../../context/class-context";
 import { useUserContext } from "../../../context/user-context";
 import UserAvatar from "../../../components/UserAvatar";
 
-const ClassItem = ({ item }) => (
+const ClassItem = ({ item, allGroups, navigation }) => (
   <Card
     key={item.id}
     style={{
@@ -16,7 +16,13 @@ const ClassItem = ({ item }) => (
       borderRadius: 25,
       elevation: 5,
     }}
-    onPress={() => console.log(item.isAdmin)}
+    onPress={() =>
+      navigation.push("ClassManagement", {
+        members: item.members,
+        groups: allGroups,
+        className: item.name,
+      })
+    }
   >
     <View padding-20>
       <View row spread>
@@ -68,8 +74,8 @@ const ClassItem = ({ item }) => (
     </View>
   </Card>
 );
-const ClassView = () => {
-  const { userClasses, allClasses } = useClassContext();
+const ClassView = ({ navigation }) => {
+  const { userClasses, allClasses, allGroups } = useClassContext();
   const { user } = useUserContext();
 
   const adminClasses = useMemo(
@@ -90,14 +96,20 @@ const ClassView = () => {
     () => [...userClasses, ...adminClasses],
     [userClasses, adminClasses]
   );
-  console.log(classes);
+  // console.log(classes);
   return (
     <View SafeAreaView flex>
       <StatusBar style="light" />
       <FlatList
         data={classes}
         keyExtractor={(item) => item.key ?? item.id}
-        renderItem={ClassItem}
+        renderItem={({ item }) => (
+          <ClassItem
+            item={item}
+            allGroups={allGroups}
+            navigation={navigation}
+          />
+        )}
       />
     </View>
   );

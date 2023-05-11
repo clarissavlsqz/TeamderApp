@@ -7,6 +7,7 @@ import CreateClassView from "./CreateClassView";
 import CreateClassSummaryView from "./CreateClassSummaryView";
 import ClassView from "./ClassView";
 import CreateOrJoinView from "./CreateOrJoin";
+import ClassManagementView from "./ClassManagementView";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,11 @@ const ClassNavigator = ({ navigation }) => (
       name="CreateClassSummary"
       component={CreateClassSummaryView}
       options={{ headerShown: true, title: "Create Summary" }}
+    />
+    <Stack.Screen
+      name="ClassManagement"
+      component={ClassManagementView}
+      options={{ headerShown: true, title: "Details" }}
     />
   </Stack.Navigator>
 );
