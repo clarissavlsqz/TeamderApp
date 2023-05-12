@@ -21,6 +21,7 @@ const images = {
 
   studying: require("./studying.png"),
   teaching: require("./teaching.png"),
+  emptyChat: require("./emptyChat.png"),
 
   avatars,
 };

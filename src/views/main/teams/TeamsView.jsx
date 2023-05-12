@@ -1,15 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Card, Text, TextField, View } from "react-native-ui-lib";
 import { StatusBar } from "expo-status-bar";
 import { FlatList } from "react-native";
 import { EvilIcons, Feather } from "@expo/vector-icons";
 import { useClassContext } from "../../../context/class-context";
 import UserAvatar from "../../../components/UserAvatar";
-import TeammatesModal from "../../../components/TeammatesModal";
 
-const TeamItem = ({ item, listMembers, checkItemPressed }) => {
-  const returnMembers = item.members;
-  const wasPress = true;
+const TeamItem = ({ item, navigation }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [teamName, setTeamName] = useState("");
 
@@ -24,8 +21,10 @@ const TeamItem = ({ item, listMembers, checkItemPressed }) => {
       }}
       // onPress={() => console.log(item.members)}
       onPress={() => {
-        checkItemPressed(wasPress);
-        listMembers(returnMembers);
+        navigation.push("TeamChat", {
+          groupId: item.id,
+          groupName: item.name,
+        });
       }}
     >
       <View padding-20>
@@ -83,22 +82,13 @@ const TeamItem = ({ item, listMembers, checkItemPressed }) => {
   );
 };
 
-const HomeView = () => {
+const HomeView = ({ navigation }) => {
   const { userGroups } = useClassContext();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [members, setMembers] = useState([]);
 
-  const getMembers = (itemMembers) => {
-    setMembers(itemMembers);
-  };
-
-  const checkModalVisibility = (visibility) => {
-    setModalVisible(visibility);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  const renderItem = useCallback(
+    ({ item }) => <TeamItem item={item} navigation={navigation} />,
+    [navigation]
+  );
 
   return (
     <View useSafeArea flex>
@@ -106,24 +96,9 @@ const HomeView = () => {
       <FlatList
         keyboardShouldPersistTaps="handled"
         data={userGroups}
-        renderItem={({ item }) => (
-          <TeamItem
-            item={item}
-            listMembers={getMembers}
-            checkItemPressed={checkModalVisibility}
-          />
-        )}
+        renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
-      {modalVisible && (
-        <View>
-          <TeammatesModal
-            members={members}
-            isVisible={modalVisible}
-            closeModal={closeModal}
-          />
-        </View>
-      )}
     </View>
   );
 };

@@ -1,20 +1,25 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Dimensions, View } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import {
   MaterialCommunityIcons,
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import TeamsView from "../views/main/teams/TeamsView";
+import { View } from "react-native-ui-lib";
 import NotificationsView from "../views/main/notifications/NotificationsView";
 import ClassNavigator from "../views/main/class/ClassNavigator";
 import ProfileNavigator from "../views/main/profile/ProfileNavigator";
 import { useNotificationsContext } from "../context/notifications-context";
 import { useUserContext } from "../context/user-context";
+import TeamsNavigator from "../views/main/teams/TeamsNavigator";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
+const height =
+  Platform.OS === "android" && Platform.Version >= 29
+    ? Dimensions.get("window").height
+    : Dimensions.get("window").height;
 const Tab = createBottomTabNavigator();
 
 const AddNotificationTest = () => {
@@ -40,12 +45,7 @@ const AddNotificationTest = () => {
 };
 
 const BottomTabNav = () => (
-  <View
-    style={{
-      width,
-      height,
-    }}
-  >
+  <View width={width} height={height}>
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -79,9 +79,9 @@ const BottomTabNav = () => (
     >
       <Tab.Screen
         name="Home"
-        component={TeamsView}
+        component={TeamsNavigator}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerBackVisible: false,
           title: "Teams",
           headerStyle: {
@@ -90,6 +90,7 @@ const BottomTabNav = () => (
           headerTintColor: "#F5F5F5",
         }}
       />
+
       <Tab.Screen
         name="Class"
         component={ClassNavigator}

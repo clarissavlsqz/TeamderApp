@@ -96,6 +96,7 @@ export const ClassContextProvider = ({ children }) => {
       classes: newClasses,
       userClasses: newClasses.filter(({ id }) => classIds.has(id)),
       groups: rawGroups,
+      userMap,
     };
   }, [rawUsers, rawMembers, rawClasses, rawGroups]);
 
@@ -128,7 +129,15 @@ export const useClassContext = () => {
   const { user } = useUserContext();
 
   const [
-    { classes, selectedClass, membership, userClasses, userGroups, groups },
+    {
+      classes,
+      selectedClass,
+      membership,
+      userClasses,
+      userGroups,
+      groups,
+      userMap,
+    },
     dispatch,
   ] = context;
 
@@ -138,6 +147,7 @@ export const useClassContext = () => {
     selectedClass,
     userGroups,
     allGroups: groups,
+    userMap,
 
     joinClass: (classId, callback) =>
       joinClass(user, membership, classes, classId, callback),
