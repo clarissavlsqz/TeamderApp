@@ -16,13 +16,16 @@ const ClassItem = ({ item, allGroups, navigation }) => (
       borderRadius: 25,
       elevation: 5,
     }}
-    onPress={() =>
-      navigation.push("ClassManagement", {
-        members: item.members,
-        groups: allGroups,
-        className: item.name,
-      })
-    }
+    onPress={() => {
+      if (item.isAdmin) {
+        navigation.push("ClassManagement", {
+          members: item.members,
+          groups: allGroups,
+          className: item.name,
+        });
+      }
+    }}
+    activeOpacity={item.isAdmin ? 0.6 : 1}
   >
     <View padding-20>
       <View row spread>
