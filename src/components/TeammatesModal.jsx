@@ -33,9 +33,7 @@ const TeammatesModal = ({ members, isVisible, closeModal }) => {
                 padding-5
                 onPress={closeModal}
               >
-                <Text style={{ fontWeight: "normal" }} text90>
-                  Close
-                </Text>
+                <Text text90>Close</Text>
               </TouchableOpacity>
             </View>
           </View>
