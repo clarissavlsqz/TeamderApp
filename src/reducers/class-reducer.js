@@ -130,14 +130,32 @@ export const createListeners = (uid, dispatch) => {
   };
 };
 
-export const joinClass = (user, membership, classes, classID, callback) => {
+export const joinClass = (
+  user,
+  membership,
+  allmemberships,
+  classes,
+  classID,
+  callback
+) => {
   if (membership.filter(({ classid }) => classid === classID).length !== 0) {
     callback(false, "You have already joined the class!");
     return;
   }
+  //console.log(membership);
 
   if (classes.filter(({ id }) => id === classID).length === 0) {
     callback(false, "Class does not exist!");
+    return;
+  }
+
+  const classCapacity = classes.find(({ id }) => id === classID)?.capacity;
+  const classMembershipsCount = allmemberships.filter(
+    ({ classid }) => classid === classID
+  ).length;
+
+  if (classMembershipsCount >= classCapacity) {
+    callback(false, "Class is full!");
     return;
   }
 

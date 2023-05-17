@@ -40,6 +40,7 @@ export const ClassContextProvider = ({ children }) => {
 
   const memoizedData = useMemo(() => {
     const userMap = {};
+    const allmemberships = rawMembers;
 
     rawUsers.forEach((dbUser) => {
       userMap[dbUser.id] = dbUser;
@@ -97,6 +98,7 @@ export const ClassContextProvider = ({ children }) => {
       userClasses: newClasses.filter(({ id }) => classIds.has(id)),
       groups: rawGroups,
       userMap,
+      allmemberships,
     };
   }, [rawUsers, rawMembers, rawClasses, rawGroups]);
 
@@ -133,6 +135,7 @@ export const useClassContext = () => {
       classes,
       selectedClass,
       membership,
+      allmemberships,
       userClasses,
       userGroups,
       groups,
@@ -150,7 +153,7 @@ export const useClassContext = () => {
     userMap,
 
     joinClass: (classId, callback) =>
-      joinClass(user, membership, classes, classId, callback),
+      joinClass(user, membership, allmemberships, classes, classId, callback),
     createClass: (data, callback) =>
       createClass(data, user, callback, dispatch),
   };
