@@ -4,6 +4,7 @@ import {
   doc,
   onSnapshot,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
@@ -142,7 +143,6 @@ export const joinClass = (
     callback(false, "You have already joined the class!");
     return;
   }
-  //console.log(membership);
 
   if (classes.filter(({ id }) => id === classID).length === 0) {
     callback(false, "Class does not exist!");
@@ -191,5 +191,13 @@ export const createClass = (
 
   setDoc(classDocRef, classData).then(() => {
     callback(true);
+  });
+};
+
+export const updateGroupName = (groupID, name) => {
+  const groupsRef = doc(db, "group", groupID);
+
+  updateDoc(groupsRef, {
+    name,
   });
 };

@@ -11,6 +11,7 @@ import {
   createDefaultState,
   joinClass,
   reducer,
+  updateGroupName,
 } from "../reducers/class-reducer";
 import { useUserContext } from "./user-context";
 
@@ -156,5 +157,6 @@ export const useClassContext = () => {
       joinClass(user, membership, allmemberships, classes, classId, callback),
     createClass: (data, callback) =>
       createClass(data, user, callback, dispatch),
+    updateGroupName
   };
 };
