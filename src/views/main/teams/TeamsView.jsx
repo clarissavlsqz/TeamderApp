@@ -5,6 +5,7 @@ import { FlatList } from "react-native";
 import { EvilIcons, Feather } from "@expo/vector-icons";
 import { useClassContext } from "../../../context/class-context";
 import UserAvatar from "../../../components/UserAvatar";
+import { updateGroupName } from "../../../reducers/class-reducer";
 
 const TeamItem = ({ item, navigation }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -64,7 +65,7 @@ const TeamItem = ({ item, navigation }) => {
           ))}
           <View marginT-3 marginR-3 flex right>
             {isEditing ? (
-              <Text text70 $textDefault onPress={() => setIsEditing(false)}>
+              <Text text70 $textDefault onPress={() => {setIsEditing(false); updateGroupName(item.id, teamName);}}>
                 Save
               </Text>
             ) : (
