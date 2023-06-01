@@ -1,7 +1,10 @@
 import React from "react";
-import { Text, View } from "react-native-ui-lib";
+import { Text, View, Button } from "react-native-ui-lib";
 import { SectionList } from "react-native";
 import UserAvatar from "../../../components/UserAvatar";
+import { collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../firebaseConfig";
+import LoadingButton from "../../../components/LoadingButton";
 
 const ClassManagementView = ({ route, navigation }) => {
   const { members, groups, className } = route.params;
@@ -29,6 +32,18 @@ const ClassManagementView = ({ route, navigation }) => {
     return data;
   });
 
+  const deleteClass = async () => {
+    console.log("Delete: ", classID);
+
+    try {
+      await updateDoc(doc(db, "class", classID), { isactive: "0" });
+      console.log("Class deleted successfully!");
+      navigation.goBack(); // Navigate back to the previous screen
+    } catch (error) {
+      console.error("Error deleting class: ", error);
+    }
+  };
+
   React.useEffect(() => {
     navigation.setOptions({
       title: className,
@@ -37,10 +52,7 @@ const ClassManagementView = ({ route, navigation }) => {
 
   return (
     <View flex>
-      {/* <Text center text20>
-        Teams
-      </Text> */}
-      <View>
+      <View flex>
         <SectionList
           sections={data}
           keyExtractor={(item, index) => item + index}
@@ -60,6 +72,14 @@ const ClassManagementView = ({ route, navigation }) => {
               </Text>
             </View>
           )}
+        />
+      </View>
+      <View useSafeArea flex s bg-screenBG style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
+        <LoadingButton
+          onPress={deleteClass}
+          label="Delete Class"
+          loading={false}
+          marginV-30
         />
       </View>
     </View>

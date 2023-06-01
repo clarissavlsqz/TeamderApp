@@ -42,30 +42,39 @@ export const ClassContextProvider = ({ children }) => {
   const memoizedData = useMemo(() => {
     const userMap = {};
     const allmemberships = rawMembers;
-
+  
     rawUsers.forEach((dbUser) => {
       userMap[dbUser.id] = dbUser;
     });
+  
+    const activeClasses = rawClasses.filter((classObj) => classObj.isactive === "1");
 
     const members = rawMembers.map((member) => ({
       user: userMap[member.userid],
       ...member,
     }));
-
+  
+    // Filter out the inactive class IDs
+    const activeClassIds = new Set(activeClasses.map(({ id }) => id));
+  
+    // Filter out the inactive groups
+    const activeGroups = rawGroups.filter(({ fromclass }) => activeClassIds.has(fromclass));
+  
+    // Filter out the inactive memberships
+    const activeMemberships = members.filter(({ classid }) => activeClassIds.has(classid));
+  
     const classesMap = {};
-    rawClasses.forEach((classDoc) => {
+    activeClasses.forEach((classDoc) => {
       classesMap[classDoc.id] = classDoc;
     });
-
+  
     const userGroupIds = new Set(
-      members
-        .filter(
-          ({ userid, groupid }) => userid === uid && groupid !== undefined
-        )
+      activeMemberships
+        .filter(({ userid, groupid }) => userid === uid && groupid !== undefined)
         .map(({ groupid }) => groupid)
     );
-
-    const userGroups = rawGroups.filter(({ id }) => userGroupIds.has(id));
+  
+    const userGroups = activeGroups.filter(({ id }) => userGroupIds.has(id));
 
     const groups = {};
     userGroups.forEach((group) => {
@@ -75,33 +84,35 @@ export const ClassContextProvider = ({ children }) => {
         members: [],
       };
     });
-
+  
     members.forEach((member) => {
       if (!member.groupid) {
         return;
       }
-
+  
       if (groups[member.groupid]) {
         groups[member.groupid].members.push(member);
       }
     });
-
-    const newClasses = rawClasses.map((classObj) => ({
+  
+    const newClasses = activeClasses.map((classObj) => ({
       members: members.filter(({ classid }) => classid === classObj.id),
       ...classObj,
     }));
-
+  
     const classIds = new Set(membership.map(({ classid }) => classid));
-
-    return {
-      userGroups: Object.values(groups),
-      classes: newClasses,
-      userClasses: newClasses.filter(({ id }) => classIds.has(id)),
-      groups: rawGroups,
-      userMap,
-      allmemberships,
-    };
-  }, [rawUsers, rawMembers, rawClasses, rawGroups]);
+  
+  return {
+    userGroups: Object.values(groups),
+    classes: newClasses,
+    userClasses: newClasses.filter(({ id }) => classIds.has(id)),
+    groups: activeGroups,
+    userMap,
+    allmemberships,
+  };
+}, [rawUsers, rawMembers, rawClasses, rawGroups]);
+  
+  
 
   const dispatchStateProvider = useMemo(
     () => [

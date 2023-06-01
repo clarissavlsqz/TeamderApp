@@ -187,6 +187,7 @@ export const createClass = (
     capacity,
     id: classId,
     admin: user.uid,
+    isactive: "1",
   };
 
   setDoc(classDocRef, classData).then(() => {
