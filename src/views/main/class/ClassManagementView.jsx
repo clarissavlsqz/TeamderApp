@@ -1,5 +1,5 @@
-import React from "react";
-import { Text, View, Button } from "react-native-ui-lib";
+import React, { useState } from "react";
+import { Text, View, Button, Dialog } from "react-native-ui-lib";
 import { SectionList } from "react-native";
 import {
   collection,
@@ -14,6 +14,7 @@ import LoadingButton from "../../../components/LoadingButton";
 
 const ClassManagementView = ({ route, navigation }) => {
   const { members, groups, className } = route.params;
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const data = [];
 
@@ -44,7 +45,8 @@ const ClassManagementView = ({ route, navigation }) => {
     try {
       await updateDoc(doc(db, "class", classID), { isactive: "0" });
       console.log("Class deleted successfully!");
-      navigation.goBack(); // Navigate back to the previous screen
+      setShowConfirmation(false); // Hide the confirmation popup after successful deletion
+      navigation.goBack();
     } catch (error) {
       console.error("Error deleting class: ", error);
     }
@@ -88,14 +90,47 @@ const ClassManagementView = ({ route, navigation }) => {
         style={{ position: "absolute", bottom: 20, alignSelf: "center" }}
       >
         <LoadingButton
-          onPress={deleteClass}
+          onPress={() => setShowConfirmation(true)} // Show the confirmation popup when the delete button is pressed
           label="Delete Class"
           loading={false}
           marginV-30
         />
       </View>
-    </View>
-  );
+
+      <Dialog
+  useSafeArea
+  visible={showConfirmation}
+  onDismiss={() => setShowConfirmation(false)}
+  containerStyle={{ justifyContent: "center", alignItems: "center" }}
+>
+  <View
+    padding-20
+    backgroundColor="#FFFFFF"
+    borderRadius={10}
+  >
+    <Text text40 marginB-20>
+      Confirm Deletion
+    </Text>
+    <Text marginB-20>
+      Are you sure you want to delete this class?
+    </Text>
+    <Button
+      label="Delete"
+      onPress={deleteClass}
+      backgroundColor="#FF0000"
+      enableShadow
+    />
+    <Button
+      label="Cancel"
+      onPress={() => setShowConfirmation(false)}
+      link
+      marginT-10
+    />
+  </View>
+</Dialog>
+</View>
+);
 };
+
 
 export default ClassManagementView;
