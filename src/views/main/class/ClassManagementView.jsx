@@ -50,12 +50,20 @@ const ClassManagementView = ({ route, navigation }) => {
   );
 
   React.useEffect(() => {
+    if (!currentClass) {
+      return;
+    }
+
     navigation.setOptions({
       title: currentClass.name,
     });
-  }, [navigation]);
+  }, [navigation, currentClass]);
 
   const groupedGroups = useMemo(() => {
+    if (!currentClass) {
+      return {};
+    }
+
     const groups = {
       ungrouped: {
         name: "Unassigned Members",
@@ -80,6 +88,10 @@ const ClassManagementView = ({ route, navigation }) => {
 
     return groups;
   }, [classGroups, currentClass]);
+
+  if (!currentClass) {
+    return null;
+  }
 
   return (
     <View flex marginH-20>
