@@ -32,8 +32,11 @@ const ClassItem = ({ item, allGroups, navigation }) => (
         <Text text40 $textDefault>
           {item.name}
         </Text>
-
-        <EvilIcons name="arrow-right" color="black" size={32} />
+        {item.isAdmin && item.members.length !== 0 ? (
+          <EvilIcons name="arrow-right" color="black" size={32} />
+        ) : (
+          <View />
+        )}
       </View>
       <View row>
         <Text text90>{item.description}</Text>
