@@ -7,7 +7,7 @@ import { useClassContext } from "../../../context/class-context";
 import { useUserContext } from "../../../context/user-context";
 import UserAvatar from "../../../components/UserAvatar";
 
-const ClassItem = ({ item, allGroups, navigation }) => (
+const ClassItem = ({ item, navigation }) => (
   <Card
     key={item.id}
     style={{
@@ -17,22 +17,20 @@ const ClassItem = ({ item, allGroups, navigation }) => (
       elevation: 5,
     }}
     onPress={() => {
-      if (item.isAdmin && item.members.length !== 0) {
+      if (item.isAdmin) {
         navigation.push("ClassManagement", {
-          members: item.members,
-          groups: allGroups,
-          className: item.name,
+          classId: item.id,
         });
       }
     }}
-    activeOpacity={item.isAdmin && item.members.length !== 0 ? 0.6 : 1}
+    activeOpacity={item.isAdmin ? 0.6 : 1}
   >
     <View padding-20>
       <View row spread>
         <Text text40 $textDefault>
           {item.name}
         </Text>
-        {item.isAdmin && item.members.length !== 0 ? (
+        {item.isAdmin ? (
           <EvilIcons name="arrow-right" color="black" size={32} />
         ) : (
           <View />
@@ -81,7 +79,7 @@ const ClassItem = ({ item, allGroups, navigation }) => (
   </Card>
 );
 const ClassView = ({ navigation }) => {
-  const { userClasses, allClasses, allGroups } = useClassContext();
+  const { userClasses, allClasses } = useClassContext();
   const { user } = useUserContext();
 
   const adminClasses = useMemo(
@@ -102,7 +100,7 @@ const ClassView = ({ navigation }) => {
     () => [...userClasses, ...adminClasses],
     [userClasses, adminClasses]
   );
-  // console.log(classes);
+
   return (
     <View SafeAreaView flex>
       <StatusBar style="light" />
@@ -110,11 +108,7 @@ const ClassView = ({ navigation }) => {
         data={classes}
         keyExtractor={(item) => item.key ?? item.id}
         renderItem={({ item }) => (
-          <ClassItem
-            item={item}
-            allGroups={allGroups}
-            navigation={navigation}
-          />
+          <ClassItem item={item} navigation={navigation} />
         )}
       />
     </View>

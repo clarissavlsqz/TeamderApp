@@ -202,3 +202,12 @@ export const updateGroupName = (groupID, name) => {
     name,
   });
 };
+
+export const deleteClass = async (classID, cb) => {
+  try {
+    await updateDoc(doc(db, "class", classID), { isactive: "0" });
+    cb(true);
+  } catch (error) {
+    cb(false, error);
+  }
+};

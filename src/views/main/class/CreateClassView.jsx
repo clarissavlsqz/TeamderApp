@@ -10,7 +10,6 @@ import LoadingButton from "../../../components/LoadingButton";
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
 
 const CreateClassView = ({ navigation }) => {
-  // const [classIdMessage, setClassIdMessage] = useState(false);
   const { createClass } = useClassContext();
 
   const {
