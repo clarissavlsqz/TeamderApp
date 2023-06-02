@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { getDocs, collection, addDoc, updateDoc } from "firebase/firestore";
 import {
@@ -10,10 +10,16 @@ import { useClassContext } from "../../../context/class-context";
 
 const CreateClassSummaryView = () => {
   const { selectedClass } = useClassContext();
+  const [groupNumber, setGroupNumber] = useState("");
 
   if (!selectedClass.class) {
     return null;
   }
+
+  const handleAssignGroups = async () => {
+    await balanceGroupsAndSaveToFirestore(groupNumber, selectedClass.class.id);
+  };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,7 +31,22 @@ const CreateClassSummaryView = () => {
       <Text>This is your unique class id: </Text>
       <Text>{selectedClass.class.id} </Text>
 
-      <TouchableOpacity onPress={() => {}} style={styles.button}>
+      <Text>Select group number:</Text>
+      <Picker
+        selectedValue={groupNumber}
+        onValueChange={(value) => setGroupNumber(value)}
+      >
+        <Picker.Item label="2" value="2" />
+        <Picker.Item label="3" value="3" />
+        <Picker.Item label="4" value="4" />
+        <Picker.Item label="5" value="5" />
+        <Picker.Item label="6" value="6" />
+        <Picker.Item label="7" value="7" />
+        <Picker.Item label="8" value="8" />
+      </Picker>
+
+
+      <TouchableOpacity onPress={handleAssignGroups} style={styles.button}>
         <Text style={styles.buttonText}> Assign groups </Text>
       </TouchableOpacity>
     </SafeAreaView>
