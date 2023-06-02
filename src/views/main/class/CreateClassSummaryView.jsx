@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Picker } from "react-native-ui-lib/src/components/picker";
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  Dialog,
+  TouchableOpacity,
+} from "react-native-ui-lib";
 import { getDocs, collection, addDoc, updateDoc } from "firebase/firestore";
 import {
   personalityTable,
@@ -20,37 +27,50 @@ const CreateClassSummaryView = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Your class was created successfully</Text>
+      <View flex center>
+        <Text text50 center>
+          {" "}
+          Your class was created successfully
+        </Text>
+      </View>
 
-      <Text />
-      <Text />
-      <Text />
-      <Text>This is your unique class id: </Text>
-      <Text>{classId} </Text>
+      <View flex center>
+        <Text text60>This is your unique class id: </Text>
+        <Text text60>{classId} </Text>
+      </View>
 
-      <Text>Select number of groups:</Text>
-      <Picker
-        value={groupNumber}
-        fieldStyle={{
-          borderRadius: 5,
-          borderWidth: 1,
-          borderColor: "black",
-          width: 70,
-        }}
-        onChange={(value) => setGroupNumber(value)}
-      >
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" />
-        <Picker.Item label="8" value="8" />
-      </Picker>
+      <View flex center>
+        <Text text60>Select number of groups:</Text>
+        <Picker
+          useWheelPicker
+          topBarProps={{ doneLabel: "Done" }}
+          containerStyle={{ marginTop: 10 }}
+          value={groupNumber}
+          fieldStyle={{
+            borderRadius: 5,
+            borderWidth: 1,
+            borderColor: "black",
+            width: 50,
+          }}
+          onChange={(value) => setGroupNumber(value)}
+        >
+          <Picker.Item label="2" value="2" />
+          <Picker.Item label="3" value="3" />
+          <Picker.Item label="4" value="4" />
+          <Picker.Item label="5" value="5" />
+          <Picker.Item label="6" value="6" />
+          <Picker.Item label="7" value="7" />
+          <Picker.Item label="8" value="8" />
+        </Picker>
+      </View>
 
-      <TouchableOpacity onPress={handleAssignGroups} style={styles.button}>
-        <Text style={styles.buttonText}> Assign groups </Text>
-      </TouchableOpacity>
+      <View flex center>
+        <Button
+          onPress={handleAssignGroups}
+          label="Assign groups"
+          color="#F5F5F5"
+        />
+      </View>
     </SafeAreaView>
   );
 };
