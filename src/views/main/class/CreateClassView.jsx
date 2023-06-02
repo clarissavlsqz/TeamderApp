@@ -28,6 +28,7 @@ const CreateClassView = ({ navigation }) => {
       () => {
         navigation.replace("CreateClassSummary", {
           classId,
+          isClassNew: true,
         });
       }
     );

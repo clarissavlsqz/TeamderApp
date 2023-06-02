@@ -115,6 +115,24 @@ const ClassManagementView = ({ route, navigation }) => {
 
       <View flexG />
 
+      {groupedGroups ? (
+        <LoadingButton
+          onPress={() =>
+            navigation.replace("CreateClassSummary", {
+              classId,
+              isClassNew: false,
+            })
+          } // Show the confirmation popup when the delete button is pressed
+          label="Assign groups"
+          loading={false}
+          color="#FFFFFF"
+          backgroundColor="#E07000"
+          marginB-20
+        />
+      ) : (
+        <View />
+      )}
+
       <LoadingButton
         onPress={() => setShowConfirmation(true)} // Show the confirmation popup when the delete button is pressed
         label="Delete Class"

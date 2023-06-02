@@ -18,6 +18,7 @@ import { useClassContext } from "../../../context/class-context";
 
 const CreateClassSummaryView = ({ route }) => {
   const classId = route.params?.classId;
+  const showMessage = route.params?.isClassNew;
   const { allClasses } = useClassContext();
   const [groupNumber, setGroupNumber] = useState("");
 
@@ -27,17 +28,25 @@ const CreateClassSummaryView = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View flex center>
-        <Text text50 center>
-          {" "}
-          Your class was created successfully
-        </Text>
-      </View>
+      {showMessage ? (
+        <View flex center>
+          <Text text50 center>
+            {" "}
+            Your class was created successfully
+          </Text>
+        </View>
+      ) : (
+        <View />
+      )}
 
-      <View flex center>
-        <Text text60>This is your unique class id: </Text>
-        <Text text60>{classId} </Text>
-      </View>
+      {showMessage ? (
+        <View flex center>
+          <Text text60>This is your unique class id: </Text>
+          <Text text60>{classId} </Text>
+        </View>
+      ) : (
+        <View />
+      )}
 
       <View flex center>
         <Text text60>Select number of groups:</Text>
