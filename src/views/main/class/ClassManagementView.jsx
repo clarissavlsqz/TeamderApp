@@ -1,8 +1,14 @@
 import React from "react";
 import { Text, View, Button } from "react-native-ui-lib";
 import { SectionList } from "react-native";
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import UserAvatar from "../../../components/UserAvatar";
-import { collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../firebaseConfig";
 import LoadingButton from "../../../components/LoadingButton";
 
@@ -74,7 +80,13 @@ const ClassManagementView = ({ route, navigation }) => {
           )}
         />
       </View>
-      <View useSafeArea flex s bg-screenBG style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
+      <View
+        useSafeArea
+        flex
+        s
+        bg-screenBG
+        style={{ position: "absolute", bottom: 20, alignSelf: "center" }}
+      >
         <LoadingButton
           onPress={deleteClass}
           label="Delete Class"
