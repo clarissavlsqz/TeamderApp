@@ -20,13 +20,16 @@ const CreateClassView = ({ navigation }) => {
   } = useForm({});
 
   const onSubmit = (data) => {
+    const classId = `${nanoid(4)}-${nanoid(4)}`;
     createClass(
       {
         ...data,
-        classId: `${nanoid(4)}-${nanoid(4)}`,
+        classId,
       },
       () => {
-        navigation.replace("CreateClassSummary");
+        navigation.replace("CreateClassSummary", {
+          classId,
+        });
       }
     );
   };

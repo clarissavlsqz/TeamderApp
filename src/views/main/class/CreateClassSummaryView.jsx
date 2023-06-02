@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Picker } from "react-native-ui-lib/src/components/picker";
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { getDocs, collection, addDoc, updateDoc } from "firebase/firestore";
 import {
@@ -8,18 +9,14 @@ import {
 import { db } from "../../../../firebaseConfig";
 import { useClassContext } from "../../../context/class-context";
 
-const CreateClassSummaryView = () => {
-  const { selectedClass } = useClassContext();
+const CreateClassSummaryView = ({ route }) => {
+  const classId = route.params?.classId;
+  const { allClasses } = useClassContext();
   const [groupNumber, setGroupNumber] = useState("");
 
-  if (!selectedClass.class) {
-    return null;
-  }
-
   const handleAssignGroups = async () => {
-    await balanceGroupsAndSaveToFirestore(groupNumber, selectedClass.class.id);
+    await balanceGroupsAndSaveToFirestore(groupNumber, classId);
   };
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,12 +26,18 @@ const CreateClassSummaryView = () => {
       <Text />
       <Text />
       <Text>This is your unique class id: </Text>
-      <Text>{selectedClass.class.id} </Text>
+      <Text>{classId} </Text>
 
-      <Text>Select group number:</Text>
+      <Text>Select number of groups:</Text>
       <Picker
-        selectedValue={groupNumber}
-        onValueChange={(value) => setGroupNumber(value)}
+        value={groupNumber}
+        fieldStyle={{
+          borderRadius: 5,
+          borderWidth: 1,
+          borderColor: "black",
+          width: 70,
+        }}
+        onChange={(value) => setGroupNumber(value)}
       >
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />
@@ -44,7 +47,6 @@ const CreateClassSummaryView = () => {
         <Picker.Item label="7" value="7" />
         <Picker.Item label="8" value="8" />
       </Picker>
-
 
       <TouchableOpacity onPress={handleAssignGroups} style={styles.button}>
         <Text style={styles.buttonText}> Assign groups </Text>
